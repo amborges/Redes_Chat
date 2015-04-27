@@ -77,9 +77,10 @@ public class SingleChat extends Application {
                 else{
                     actiontarget.setFill(Color.BLUE);
                     actiontarget.setText("LOGON");
-                    JanelaChat jc = new JanelaChat(userTextField.getText());
+                    ListaAmigos listaAmigos = new ListaAmigos(userTextField.getText());
                     Stage sndStage = new Stage();
-                    jc.start(sndStage);
+                    listaAmigos.start(sndStage);
+                    primaryStage.close();
                 }
             }
         });
