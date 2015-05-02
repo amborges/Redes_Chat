@@ -87,6 +87,19 @@ public class JanelaChat extends Application{
             }
         });
         grid.add(send, 2, 2);
+        
+        Button close = new Button();
+        close.setText("Close Chat");
+        close.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                ListaAmigos.remove(userName);
+                server.interrupt();
+                primaryStage.close();
+            }
+        });
+        grid.add(close, 2, 3);
+        
         Scene scene = new Scene(grid, 800, 600);
         primaryStage.setTitle("Welcome " + userName + " to singleChat! :: " + friendName);
         primaryStage.setScene(scene);
@@ -126,13 +139,6 @@ public class JanelaChat extends Application{
             //conversa longa, vai começar a ficar lento, deveria ter algo
             //apenas para fazer um append/concat no textarea
         chatHistory.setText(chatHistory.getText().concat(textFinal));
-        msg.clear();
-        try{
-            Socket client = new Socket("localhost", door);
-            ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
-            entrada.close();
-        }catch(Exception e){
-            System.out.println("FALHA AO ENVIAR MENSAGEM: " + e);
-        }
+        //msg.clear();
     }
 }

@@ -23,24 +23,27 @@ import javafx.stage.Stage;
  * @author alex
  */
 public class ListaAmigos extends Application{
-    String userName;
-    int IPs[];
-    final ToggleGroup group; //armazena os radio button
+    private String userName;
+    private int IPs[];
+    private final ToggleGroup group; //armazena os radio button
+    private static ArrayList<String> openChat;
     
     ListaAmigos(String s){
         userName = s;
         IPs = new int[1];
         IPs[0] = 999;
         group = new ToggleGroup();
+        openChat = new ArrayList<String>();
     }
     
-    ListaAmigos(String s, int list[]){
+    ListaAmigos(String s, int list[], ArrayList<String> als){
         userName = s;
         IPs = new int[list.length+1];
         for(int i = 0; i < list.length+1; i++){
             IPs[i] = i; 
         }
         group = new ToggleGroup();
+        openChat = als;
     }
     
     @Override
@@ -61,7 +64,7 @@ public class ListaAmigos extends Application{
             @Override
             public void handle(ActionEvent e) {
                 int sizeIP = IPs.length;
-                ListaAmigos listaAmigos = new ListaAmigos(userName, IPs);
+                ListaAmigos listaAmigos = new ListaAmigos(userName, IPs, openChat);
                 Stage sndStage = new Stage();
                 listaAmigos.start(sndStage);
                 primaryStage.close();
@@ -70,18 +73,31 @@ public class ListaAmigos extends Application{
         grid.add(atualizaLista, 0, 0);
         
         Button btnChat = new Button();
-            btnChat.setText("Iniciar Chat");
-            btnChat.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    int num = 0;
-                    RadioButton who = (RadioButton)group.getSelectedToggle();
-                    JanelaChat newWindow = new JanelaChat(userName, who.getText());
+        btnChat.setText("Iniciar Chat");
+        btnChat.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                String who = ((RadioButton)group.getSelectedToggle()).getText();
+                
+                if(!openChat.contains(who)){
+                    JanelaChat newWindow = new JanelaChat(userName, who);
                     Stage sndStage = new Stage();
                     newWindow.start(sndStage);
+                    openChat.add(who);
                 }
-            });
-            grid.add(btnChat, 1, 0);
+            }
+        });
+        grid.add(btnChat, 1, 0);
+            
+        Button closeChat = new Button();
+        closeChat.setText("Fechar Chat");
+        closeChat.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                System.exit(1);
+            }
+        });
+        grid.add(closeChat, 2, 0);
         
         ArrayList<RadioButton> radios = new ArrayList<RadioButton>();
         
@@ -104,5 +120,9 @@ public class ListaAmigos extends Application{
     
     protected int getIP(int pos){
         return IPs[pos];
+    }
+    
+    public static void remove(String s){
+        openChat.remove(s);
     }
 }

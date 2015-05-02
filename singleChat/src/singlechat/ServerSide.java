@@ -41,6 +41,7 @@ public class ServerSide extends Thread{ //implements Runnable{
                 saida.close();
                 client.close();
                 janela.listened("oi, eu sou goku");
+                System.out.println("MSG send");
             }catch(Exception e){
                 System.out.println("FALHA CONECTAR NO SERVIDOR: " + e);
             }
