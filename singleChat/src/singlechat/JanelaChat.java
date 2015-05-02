@@ -5,6 +5,8 @@
  */
 package singlechat;
 
+import java.io.ObjectInputStream;
+import java.net.Socket;
 import java.util.Calendar;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -18,6 +20,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -28,22 +31,30 @@ public class JanelaChat extends Application{
     private TextArea chatHistory;
     private TextArea msg;
     private int ip;
+    private int door = 12354;
     private String friendName;
+    private ServerSide server;
     
     JanelaChat(String name, int numIP){
         userName = name;
         ip = numIP;
         friendName = "";
+        server = new ServerSide(door, this);
     }
     
     JanelaChat(String name, String friend){
         userName = name;
         friendName = friend;
         ip = 999;
+        server = new ServerSide(door, this);
     }
     
     @Override
     public void start(Stage primaryStage) {
+        //COLOCANDO PRA FUNCIONAR AS APLICAÇÔES PARALELAS
+        server.start();
+        //FIM DAS APLICAÇÔES PARALELAS
+        
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
@@ -95,6 +106,33 @@ public class JanelaChat extends Application{
                 //apenas para fazer um append/concat no textarea
             chatHistory.setText(chatHistory.getText().concat(textFinal));
             msg.clear();
+            try{
+                Socket client = new Socket("localhost", door);
+                ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
+                entrada.close();
+            }catch(Exception e){
+                System.out.println("FALHA AO ENVIAR MENSAGEM: " + e);
+            }
+        }
+    }
+    
+    public void listened(String friendMsg){
+        String hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":"
+                + Calendar.getInstance().get(Calendar.MINUTE) + ":"
+                + Calendar.getInstance().get(Calendar.SECOND);
+
+        String textFinal = friendName + "[" + hour + "]: " + friendMsg + "\n";
+            //temos q otimizar a linha de baixo, pensando no caso de uma
+            //conversa longa, vai começar a ficar lento, deveria ter algo
+            //apenas para fazer um append/concat no textarea
+        chatHistory.setText(chatHistory.getText().concat(textFinal));
+        msg.clear();
+        try{
+            Socket client = new Socket("localhost", door);
+            ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
+            entrada.close();
+        }catch(Exception e){
+            System.out.println("FALHA AO ENVIAR MENSAGEM: " + e);
         }
     }
 }
