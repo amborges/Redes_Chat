@@ -17,7 +17,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -29,6 +28,12 @@ import javafx.stage.Stage;
  * @author alex
  */
 public class SingleChat extends Application {
+    
+    /*
+    *   Esta classe é a janela inicial do aplicativo
+    *   Ela só abre, pede usuário e senha, e encerra
+    */
+    
     
     @Override
     public void start(Stage primaryStage) {
@@ -64,6 +69,9 @@ public class SingleChat extends Application {
         grid.add(actiontarget, 1, 6);
         
         btn.setOnAction(new EventHandler<ActionEvent>() {
+            /*
+            *   Função de LOGIN, Usuário e senha devem estar preenchidos
+            */
             @Override
             public void handle(ActionEvent e) {
                 if(userTextField.getText().isEmpty()){

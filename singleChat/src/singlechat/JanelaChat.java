@@ -5,7 +5,8 @@
  */
 package singlechat;
 
-import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Calendar;
 import javafx.application.Application;
@@ -20,39 +21,47 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javax.swing.JTextArea;
 
 /**
  *
  * @author alex
  */
 public class JanelaChat extends Application{
-    private String userName;
-    private TextArea chatHistory;
-    private TextArea msg;
-    private int ip;
-    private int door = 12354;
-    private String friendName;
-    private ServerSide server;
     
-    JanelaChat(String name, int numIP){
-        userName = name;
-        ip = numIP;
-        friendName = "";
-        server = new ServerSide(door, this);
-    }
+    /*
+    *   Esta classe é a janela de conversa, existe uma para cada contato aberto
+    */
     
-    JanelaChat(String name, String friend){
+    private String userName; //meu nome
+    private TextArea chatHistory; //área de conversa
+    private TextArea msg; //area de escrever a mensagem
+    private int mydoor; //minha porta
+    private ServerSide server; //o servidor que ouve a conversa
+    private InetAddress friendIP; //ip do contato
+    private int friendDoor; //porta do meu contato
+    private String friendName; //nome do meu conttato
+    private ListaAmigos programa; //origem
+    
+    /*
+    É PRECISO REESCREVER ESSA CLASSE, QUANDO SE TRATA DE RECEBER O IP E PORTA DO
+    CONTATO EM QUESTAO. E ATUALIZAR A VARIAVEL programa QUANDO HOUVER ATUALIZACAO
+    DO OBJETO ListaAmigos
+    */
+    
+    JanelaChat(String name, String numIP, int myporta, int friendporta, String friendname, ListaAmigos la) throws Exception{
         userName = name;
-        friendName = friend;
-        ip = 999;
-        server = new ServerSide(door, this);
+        friendIP = InetAddress.getByName(numIP);
+        friendName = friendname;
+        mydoor = myporta;
+        friendDoor = friendporta;
+        server = new ServerSide(mydoor, this);
+        programa = la;
     }
     
     @Override
     public void start(Stage primaryStage) {
         //COLOCANDO PRA FUNCIONAR AS APLICAÇÔES PARALELAS
-        server.start();
+        server.start(); //o servidor fica rodando a parte, ouvindo conversa
         //FIM DAS APLICAÇÔES PARALELAS
         
         GridPane grid = new GridPane();
@@ -64,6 +73,9 @@ public class JanelaChat extends Application{
         msg = new TextArea();
         msg.setPrefSize(12, 6);
         msg.setOnKeyPressed(new EventHandler<KeyEvent>(){
+            /*
+            *   Se for pressionado ENTER, ele envia mensagem
+            */
             @Override
             public void handle(KeyEvent k){
                 if (k.getCode().equals(KeyCode.ENTER)) {
@@ -81,6 +93,9 @@ public class JanelaChat extends Application{
         Button send = new Button();
         send.setText("Send");
         send.setOnAction(new EventHandler<ActionEvent>() {
+            /*
+            *   Se o botão SEND for pressionado, envia a mensagem
+            */
             @Override
             public void handle(ActionEvent e) {
                 updateTextArea();
@@ -91,9 +106,13 @@ public class JanelaChat extends Application{
         Button close = new Button();
         close.setText("Close Chat");
         close.setOnAction(new EventHandler<ActionEvent>() {
+            /*
+            *   Encerra o chat, encerrando tb o servidor paralelo
+            *   Remove tb o nome deste contato da lista de chats abertos
+            */
             @Override
             public void handle(ActionEvent e) {
-                ListaAmigos.remove(userName);
+                programa.remove(friendName);
                 server.interrupt();
                 primaryStage.close();
             }
@@ -107,7 +126,14 @@ public class JanelaChat extends Application{
     }
     
     private void updateTextArea(){
-        if(!msg.getText().isEmpty()){
+        /*
+        *   Este método atualiza a área de conversação;
+        *   Ela é chamada tanto quando se dá um enter quando se aperta um botão
+        *   Quando se dá enter ela possui uma falha, o caractere enter fica na
+        *   textbox de mensagem. Não consegui remover
+        */
+        
+        if(!msg.getText().isEmpty()){ //campo mensagem não pode estar vazio
             String hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":"
                     + Calendar.getInstance().get(Calendar.MINUTE) + ":"
                     + Calendar.getInstance().get(Calendar.SECOND);
@@ -119,10 +145,20 @@ public class JanelaChat extends Application{
                 //apenas para fazer um append/concat no textarea
             chatHistory.setText(chatHistory.getText().concat(textFinal));
             msg.clear();
-            try{
-                Socket client = new Socket("localhost", door);
-                ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
-                entrada.close();
+            try{ //esse try, é pra enviar a mensagem ao amigo
+                Socket client;
+                if(friendIP.toString().equalsIgnoreCase("localhost/127.0.0.1")){
+                    //Se entrou aqui, é pq é chat teste, fala consigo mesmo
+                    client = new Socket("localhost", mydoor);
+                }
+                else
+                    client = new Socket(friendIP, friendDoor);
+                //ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
+                ObjectOutputStream sender = new ObjectOutputStream(client.getOutputStream());
+                sender.flush();
+                sender.writeUTF(msg.getText());
+                sender.close();
+                //entrada.close();
             }catch(Exception e){
                 System.out.println("FALHA AO ENVIAR MENSAGEM: " + e);
             }
@@ -130,6 +166,12 @@ public class JanelaChat extends Application{
     }
     
     public void listened(String friendMsg){
+        
+        /*
+        *   Esta classe é acessada pelo servidor paralelo, afim de atualizar
+        *   a textarea com a mensagem recebida do contato
+        */
+        
         String hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":"
                 + Calendar.getInstance().get(Calendar.MINUTE) + ":"
                 + Calendar.getInstance().get(Calendar.SECOND);

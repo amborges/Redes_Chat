@@ -23,27 +23,48 @@ import javafx.stage.Stage;
  * @author alex
  */
 public class ListaAmigos extends Application{
-    private String userName;
-    private int IPs[];
+    
+    /*
+    *   Esta classe é onde se encontram os contatos ativos para iniciar uma conversa
+    *
+    *   É preciso criar uma função que atualiza a lista de IPs do Servidor
+    */
+    
+    private String userName; //meu nome
+    private ArrayList<String> IPs; //lista de IPS, é string pois uso o InetAddress
+                                   //pra gerar o ip, formato esperado "x.x.x.x"
     private final ToggleGroup group; //armazena os radio button
-    private static ArrayList<String> openChat;
+    private ServerLister serverLister; //servidor para iniciar um chat novo
+    
+    private ArrayList<String> openChat; //lista de chats abertos
+    private int porta; //porta disponivel para conversa
+    
     
     ListaAmigos(String s){
         userName = s;
-        IPs = new int[1];
-        IPs[0] = 999;
+        IPs = new ArrayList<String>();
+        IPs.add("localhost"); //remover essa linha, é usada para testes
         group = new ToggleGroup();
+        serverLister = new ServerLister(userName, this);
+        serverLister.start();
+        
         openChat = new ArrayList<String>();
+        porta = 20000; //porta inicial
     }
     
-    ListaAmigos(String s, int list[], ArrayList<String> als){
-        userName = s;
-        IPs = new int[list.length+1];
-        for(int i = 0; i < list.length+1; i++){
-            IPs[i] = i; 
-        }
+    ListaAmigos(ListaAmigos old){
+        /*
+        * Este construtor é obrigatório, pois não descobri como fazer um
+        * campo de atualização dinâmica, logo, é preciso fazer uma cópia da janela
+        * e renderizar ela novamente
+        */
+        userName = old.userName;
+        IPs = old.IPs;
         group = new ToggleGroup();
-        openChat = als;
+        openChat = old.openChat;
+        porta = old.porta;
+        serverLister = old.serverLister;
+        serverLister.updateListaAmigos(this);
     }
     
     @Override
@@ -61,10 +82,13 @@ public class ListaAmigos extends Application{
         Button atualizaLista = new Button();
         atualizaLista.setText("Obter Lista de Usuários Ativos");
         atualizaLista.setOnAction(new EventHandler<ActionEvent>() {
+            /*
+            *   Sempre que precisamos atualizar a lista de amigos
+            *   vamos recarregar esta janela, destruindo ela e criando uma nova
+            */
             @Override
             public void handle(ActionEvent e) {
-                int sizeIP = IPs.length;
-                ListaAmigos listaAmigos = new ListaAmigos(userName, IPs, openChat);
+                ListaAmigos listaAmigos = new ListaAmigos(ListaAmigos.this);
                 Stage sndStage = new Stage();
                 listaAmigos.start(sndStage);
                 primaryStage.close();
@@ -79,11 +103,17 @@ public class ListaAmigos extends Application{
             public void handle(ActionEvent e) {
                 String who = ((RadioButton)group.getSelectedToggle()).getText();
                 
-                if(!openChat.contains(who)){
-                    JanelaChat newWindow = new JanelaChat(userName, who);
-                    Stage sndStage = new Stage();
-                    newWindow.start(sndStage);
-                    openChat.add(who);
+                if(!has(who)){
+                    int friendDoor = 29293; //porta aleatória, é preciso capturar a porta corretamente
+                    try{
+                                            //String name, String numIP, int myporta, int friendporta, String friendname
+                        JanelaChat newWindow = new JanelaChat(userName, who, getPorta(), friendDoor, who, ListaAmigos.this);
+                        Stage sndStage = new Stage();
+                        newWindow.start(sndStage);
+                        include(who);
+                    } catch(Exception ex){
+                        System.out.println("Falha ao abrir janela de chat : " + ex);
+                    }
                 }
             }
         });
@@ -92,6 +122,9 @@ public class ListaAmigos extends Application{
         Button closeChat = new Button();
         closeChat.setText("Fechar Chat");
         closeChat.setOnAction(new EventHandler<ActionEvent>() {
+            /*
+            *   Encerra o programa
+            */
             @Override
             public void handle(ActionEvent e) {
                 System.exit(1);
@@ -101,8 +134,9 @@ public class ListaAmigos extends Application{
         
         ArrayList<RadioButton> radios = new ArrayList<RadioButton>();
         
-        for(int i = 0; i < IPs.length; i++){
-            RadioButton radioButton = new RadioButton("User " + IPs[i]);
+        //Carrega a lista toda de IPs
+        for(int i = 0; i < IPs.size(); i++){
+            RadioButton radioButton = new RadioButton(IPs.get(i));
             radios.add(radioButton);
             radios.get(i).setToggleGroup(group);
             grid.add(radios.get(i), 1, i + 1);
@@ -118,11 +152,28 @@ public class ListaAmigos extends Application{
         primaryStage.show();
     }
     
-    protected int getIP(int pos){
-        return IPs[pos];
+    public void remove(String s){
+        //uma janela de chat foi fechada
+        if(openChat.remove(s))
+            System.out.println(s + " removido com sucesso!");
+        else
+            System.out.println("Não foi possível remover " + s);
     }
     
-    public static void remove(String s){
-        openChat.remove(s);
+    public void include(String s){
+        //uma janela de chat foi aberta
+        openChat.add(s);
+    }
+    
+    public boolean has(String s){
+        //retorna true se existe uma janela de chat com esse contato
+        return openChat.contains(s);
+    }
+    
+    public int getPorta(){
+        //retorna a porta disponível para abrir um novo chat
+        int r = porta;
+        porta ++;
+        return r;
     }
 }
