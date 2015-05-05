@@ -188,6 +188,19 @@ public class ListaAmigos extends Application{
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
+        
+         public static void returnPeers(String ip){
+		
+		if(!listOfPeers.isEmpty()){
+            String msg = "";
+            for(int i = 0; i < listOfPeers.size(); i++){
+                msg += listOfPeers.get(i).getID() + " " +
+                        listOfPeers.get(i).getName() + " " +
+                        listOfPeers.get(i).getIP() + " " +
+                        listOfPeers.get(i).getStatus() + " " +
+                        listOfPeers.get(i).getKey() + " ";
+            }
+            
     }
     
     public void remove(String s){
