@@ -47,8 +47,9 @@ public class ExibeAmigos extends Application{
 
                 @Override
                 public void handle(ActionEvent event) {
-                    ListaAmigos instancia = new ListaAmigos();
-                    instancia.iniciaConversa(item);
+                    ListaAmigos instancia = new ListaAmigos(item.ip);
+                    Stage sndStage = new Stage();
+                    instancia.start(sndStage);
                 }
 
             });

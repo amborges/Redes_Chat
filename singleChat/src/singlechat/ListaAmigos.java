@@ -61,6 +61,20 @@ public class ListaAmigos extends Application{
         
         this.listaPeers = listaPeers;
     }
+    
+    ListaAmigos(String ip){
+        
+        IPs = new ArrayList<String>();
+        IPs.add(""+ip+""); //remover essa linha, é usada para testes
+        group = new ToggleGroup();
+        serverLister = new ServerLister(userName, this);
+        serverLister.start();
+        
+        openChat = new ArrayList<String>();
+        porta = 20000; //porta inicial
+        
+        
+    }
 
     public ListaAmigos() {
         this.group = null;
