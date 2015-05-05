@@ -6,6 +6,9 @@
 package singlechat;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -39,8 +42,11 @@ public class ListaAmigos extends Application{
     private ArrayList<String> openChat; //lista de chats abertos
     private int porta; //porta disponivel para conversa
     
+    private LinkedList<SingleChat.Peers> listaPeers;
     
-    ListaAmigos(String s){
+    
+    //esse método é para iniciar conversa com alguém, na verdade
+    ListaAmigos(String s, LinkedList<SingleChat.Peers> listaPeers){
         userName = s;
         IPs = new ArrayList<String>();
         IPs.add("169.254.241.240"); //remover essa linha, é usada para testes
@@ -50,6 +56,8 @@ public class ListaAmigos extends Application{
         
         openChat = new ArrayList<String>();
         porta = 20000; //porta inicial
+        
+        this.listaPeers = listaPeers;
     }
     
     ListaAmigos(ListaAmigos old){
@@ -88,10 +96,16 @@ public class ListaAmigos extends Application{
             */
             @Override
             public void handle(ActionEvent e) {
-                ListaAmigos listaAmigos = new ListaAmigos(ListaAmigos.this);
+                //ListaAmigos listaAmigos = new ListaAmigos(ListaAmigos.this);
+                ExibeAmigos exibeAmigos = new ExibeAmigos(listaPeers);
                 Stage sndStage = new Stage();
-                listaAmigos.start(sndStage);
-                primaryStage.close();
+                try {
+                    //listaAmigos.start(sndStage);
+                    exibeAmigos.start(sndStage);
+                } catch (Exception ex) {
+                    Logger.getLogger(ListaAmigos.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
             }
         });
         grid.add(atualizaLista, 0, 0);

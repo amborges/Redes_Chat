@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.LinkedList;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -39,6 +40,7 @@ public class SingleChat extends Application {
     *   Ela só abre, pede usuário e senha, e encerra
     */
     private static final String IPSERVIDOR = "169.254.241.240";
+    
     
     @Override
     public void start(Stage primaryStage) {
@@ -90,8 +92,8 @@ public class SingleChat extends Application {
                 else{
                     actiontarget.setFill(Color.BLUE);
                     actiontarget.setText("LOGON");
-                    autenticaUsuarioNoServidor(userTextField.getText(), IPSERVIDOR);
-                    ListaAmigos listaAmigos = new ListaAmigos(userTextField.getText());
+                    LinkedList<Peers> listaPeers = autenticaUsuarioNoServidor(userTextField.getText(), IPSERVIDOR);
+                    ListaAmigos listaAmigos = new ListaAmigos(userTextField.getText(), listaPeers);
                     Stage sndStage = new Stage();
                     listaAmigos.start(sndStage);
                     primaryStage.close();
@@ -107,8 +109,9 @@ public class SingleChat extends Application {
     }
 
     
-    public void autenticaUsuarioNoServidor(String nome, String ipServidor){
+    public LinkedList<Peers> autenticaUsuarioNoServidor(String nome, String ipServidor){
         Socket client;
+        LinkedList<Peers> listaPeers = new LinkedList<Peers>();
         try {
             
             //Logando usuário no servidor
@@ -120,16 +123,50 @@ public class SingleChat extends Application {
             request.close();
             client.close();
             
+            //recuperando lista de usuarios
             ServerSocket server = new ServerSocket(6992);
             Socket cliente2 = server.accept();
             ObjectInputStream streamRetorno = new ObjectInputStream(cliente2.getInputStream());
             String listaDeAmigos = streamRetorno.readUTF();
-            System.out.println(listaDeAmigos);
+            
+            
+            String[] tokens = listaDeAmigos.split(" ");
+            
+            
+            int n=1;
+            for(int i=0; i<=tokens.length; i++){
+                if(i==n){
+                    Peers peer = new Peers(tokens[i], tokens[i+1]);
+                    listaPeers.add(peer);
+                    n+=5;
+                }
+            }
+            
+            for(Peers item : listaPeers){
+                System.out.println("Nome: "+item.nome);
+                System.out.println("IP: "+item.ip);
+                System.out.println();
+            }
+            
+            
             
             
         } catch (IOException ex) {
             
         }
+        return listaPeers;
+    }
+    
+    public class Peers{
+
+        public Peers(String nome, String ip) {
+            this.nome = nome;
+            this.ip = ip;
+        }
+        public String nome;
+        public String ip;
+        
+        
     }
     
     
