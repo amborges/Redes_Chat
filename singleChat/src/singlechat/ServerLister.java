@@ -50,12 +50,17 @@ public class ServerLister extends Thread{
                 String who = "ciclano";
                 
                 if(!programa.has(who)){
-                    System.out.println("testando");
+                    
                     int friendDoor = 20000; //porta aleatória, definir corretamente depois
                     JanelaChat newWindow = new JanelaChat(userName, who, programa.getPorta(), friendDoor, who, programa);
                     Stage sndStage = new Stage();
                     newWindow.start(sndStage);
                     programa.include(who);
+                    System.out.println("Antes da conexao!");
+                client = server.accept();
+                System.out.println("Depois da conexao!");
+				ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
+				String msg = entrada.readUTF();
                 }
                 
                 client.close();
