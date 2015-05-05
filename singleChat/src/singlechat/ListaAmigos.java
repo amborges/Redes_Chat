@@ -82,17 +82,7 @@ public class ListaAmigos extends Application{
    
     
     
-    public void iniciaConversa(SingleChat.Peers peer){
-        IPs = new ArrayList<String>();
-        IPs.add(peer.ip);
-        
-        serverLister = new ServerLister(peer.nome, this);
-        serverLister.start();
-        
-        openChat = new ArrayList<String>();
-        porta = peer.porta; //porta inicial
-        
-    }
+    
     
     ListaAmigos(ListaAmigos old){
         /*
@@ -223,5 +213,17 @@ public class ListaAmigos extends Application{
         int r = porta;
         porta ++;
         return r;
+    }
+    
+    public void iniciaConversa(SingleChat.Peers peer){
+        IPs = new ArrayList<String>();
+        IPs.add(peer.ip);
+        
+        serverLister = new ServerLister(peer.nome, this);
+        serverLister.start();
+        
+        openChat = new ArrayList<String>();
+        porta = peer.porta; //porta inicial
+        
     }
 }
