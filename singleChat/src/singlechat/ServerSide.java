@@ -40,7 +40,7 @@ public class ServerSide extends Thread{
     public void run(){
         while(true){
             try{
-              
+             
                 client = server.accept();
                 //System.out.println("CONECTOU");
                 //Recebe do cliente a mensagem, e escreve no chat

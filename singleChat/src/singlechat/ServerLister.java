@@ -56,11 +56,7 @@ public class ServerLister extends Thread{
                     Stage sndStage = new Stage();
                     newWindow.start(sndStage);
                     programa.include(who);
-                    System.out.println("Antes da conexao!");
-                client = server.accept();
-                System.out.println("Depois da conexao!");
-				ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
-				String msg = entrada.readUTF();
+                    
                 }
                 
                 client.close();
