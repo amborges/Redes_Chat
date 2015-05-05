@@ -79,7 +79,7 @@ public class JanelaChat extends Application{
             @Override
             public void handle(KeyEvent k){
                 if (k.getCode().equals(KeyCode.ENTER)) {
-                    updateTextArea();
+                    updateTextArea(msg);
                 }
             }
         });
@@ -98,7 +98,7 @@ public class JanelaChat extends Application{
             */
             @Override
             public void handle(ActionEvent e) {
-                updateTextArea();
+                updateTextArea(msg);
             }
         });
         grid.add(send, 2, 2);
@@ -125,7 +125,7 @@ public class JanelaChat extends Application{
         primaryStage.show();
     }
     
-    private void updateTextArea(){
+    private void updateTextArea(TextArea texto){
         /*
         *   Este método atualiza a área de conversação;
         *   Ela é chamada tanto quando se dá um enter quando se aperta um botão
@@ -133,11 +133,11 @@ public class JanelaChat extends Application{
         *   textbox de mensagem. Não consegui remover
         */
         
-        if(!msg.getText().isEmpty()){ //campo mensagem não pode estar vazio
+        if(!texto.getText().isEmpty()){ //campo mensagem não pode estar vazio
             String hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":"
                     + Calendar.getInstance().get(Calendar.MINUTE) + ":"
                     + Calendar.getInstance().get(Calendar.SECOND);
-            String msgT = msg.getText();
+            String msgT = texto.getText();
             
             String textFinal = userName + "[" + hour + "]: " + msg.getText() + "\n";
                 //temos q otimizar a linha de baixo, pensando no caso de uma
@@ -156,7 +156,7 @@ public class JanelaChat extends Application{
                 //ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
                 ObjectOutputStream sender = new ObjectOutputStream(client.getOutputStream());
                 sender.flush();
-                sender.writeUTF(msg.getText());
+                sender.writeUTF(msgT);
                 sender.close();
                 //entrada.close();
             }catch(Exception e){

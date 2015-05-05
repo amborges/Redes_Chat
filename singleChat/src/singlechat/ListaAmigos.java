@@ -104,7 +104,7 @@ public class ListaAmigos extends Application{
                 String who = ((RadioButton)group.getSelectedToggle()).getText();
                 
                 if(!has(who)){
-                    int friendDoor = 29293; //porta aleatória, é preciso capturar a porta corretamente
+                    int friendDoor = 20000; //porta aleatória, é preciso capturar a porta corretamente
                     try{
                                             //String name, String numIP, int myporta, int friendporta, String friendname
                         JanelaChat newWindow = new JanelaChat(userName, who, getPorta(), friendDoor, who, ListaAmigos.this);
