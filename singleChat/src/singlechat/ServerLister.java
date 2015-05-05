@@ -26,7 +26,15 @@ public class ServerLister extends Thread{
     private String userName;
     private ListaAmigos programa;
     
-    
+    ServerLister(String n, ListaAmigos la){
+        try{
+            server = new ServerSocket(20000); //porta definida no protocolo
+            userName = n;
+            programa = la;
+        }catch(Exception e){
+            System.out.println("FALHA ALOCAR NO SERVIDOR PRINCIPAL: " + e);
+        }
+    }
     
     public void updateListaAmigos(ListaAmigos la){
         programa = la;
@@ -42,6 +50,7 @@ public class ServerLister extends Thread{
                 String who = "ciclano";
                 
                 if(!programa.has(who)){
+                    System.out.println("testando");
                     int friendDoor = 20000; //porta aleatória, definir corretamente depois
                     JanelaChat newWindow = new JanelaChat(userName, who, programa.getPorta(), friendDoor, who, programa);
                     Stage sndStage = new Stage();
@@ -53,15 +62,6 @@ public class ServerLister extends Thread{
             }catch(Exception e){
                 System.out.println("FALHA CONECTAR NO SERVIDOR: " + e);
             }
-        }
-    }
-    ServerLister(String n, ListaAmigos la){
-        try{
-            server = new ServerSocket(20000); //porta definida no protocolo
-            userName = n;
-            programa = la;
-        }catch(Exception e){
-            System.out.println("FALHA ALOCAR NO SERVIDOR PRINCIPAL: " + e);
         }
     }
 }
