@@ -7,6 +7,9 @@ package singlechat;
 
 import java.util.LinkedList;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -39,6 +42,17 @@ public class ExibeAmigos extends Application{
         for(SingleChat.Peers item : listaPeers){
             Button botao = new Button();
             botao.setText("Contato: "+item.nome);
+            
+            botao.setOnAction(new EventHandler<ActionEvent>(){
+
+                @Override
+                public void handle(ActionEvent event) {
+                    ListaAmigos instancia = new ListaAmigos();
+                    instancia.iniciaConversa(item);
+                }
+
+            });
+            
             grid.add(botao, 0, i);
             i++;
         }

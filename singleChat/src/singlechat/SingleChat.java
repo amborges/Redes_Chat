@@ -134,11 +134,13 @@ public class SingleChat extends Application {
             
             
             int n=1;
+            int portaInicial = 20000;
             for(int i=0; i<=tokens.length; i++){
                 if(i==n){
-                    Peers peer = new Peers(tokens[i], tokens[i+1]);
+                    Peers peer = new Peers(tokens[i], tokens[i+1], portaInicial);
                     listaPeers.add(peer);
                     n+=5;
+                    portaInicial+=1;
                 }
             }
             
@@ -159,12 +161,15 @@ public class SingleChat extends Application {
     
     public class Peers{
 
-        public Peers(String nome, String ip) {
+        public Peers(String nome, String ip, int porta) {
             this.nome = nome;
             this.ip = ip;
+            this.porta = porta;
         }
+        
         public String nome;
         public String ip;
+        public int porta;
         
         
     }

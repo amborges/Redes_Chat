@@ -45,6 +45,8 @@ public class ListaAmigos extends Application{
     private LinkedList<SingleChat.Peers> listaPeers;
     
     
+    
+    
     //esse método é para iniciar conversa com alguém, na verdade
     ListaAmigos(String s, LinkedList<SingleChat.Peers> listaPeers){
         userName = s;
@@ -58,6 +60,24 @@ public class ListaAmigos extends Application{
         porta = 20000; //porta inicial
         
         this.listaPeers = listaPeers;
+    }
+
+    public ListaAmigos() {
+        this.group = null;
+    }
+   
+    
+    
+    public void iniciaConversa(SingleChat.Peers peer){
+        IPs = new ArrayList<String>();
+        IPs.add(peer.ip);
+        
+        serverLister = new ServerLister(peer.nome, this);
+        serverLister.start();
+        
+        openChat = new ArrayList<String>();
+        porta = peer.porta; //porta inicial
+        
     }
     
     ListaAmigos(ListaAmigos old){
