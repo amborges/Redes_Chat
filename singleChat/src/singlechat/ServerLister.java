@@ -26,15 +26,7 @@ public class ServerLister extends Thread{
     private String userName;
     private ListaAmigos programa;
     
-    ServerLister(String n, ListaAmigos la){
-        try{
-            server = new ServerSocket(20000); //porta definida no protocolo
-            userName = n;
-            programa = la;
-        }catch(Exception e){
-            System.out.println("FALHA ALOCAR NO SERVIDOR PRINCIPAL: " + e);
-        }
-    }
+    
     
     public void updateListaAmigos(ListaAmigos la){
         programa = la;
@@ -61,6 +53,15 @@ public class ServerLister extends Thread{
             }catch(Exception e){
                 System.out.println("FALHA CONECTAR NO SERVIDOR: " + e);
             }
+        }
+    }
+    ServerLister(String n, ListaAmigos la){
+        try{
+            server = new ServerSocket(20000); //porta definida no protocolo
+            userName = n;
+            programa = la;
+        }catch(Exception e){
+            System.out.println("FALHA ALOCAR NO SERVIDOR PRINCIPAL: " + e);
         }
     }
 }
