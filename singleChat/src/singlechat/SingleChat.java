@@ -5,6 +5,11 @@
  */
 package singlechat;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -33,7 +38,7 @@ public class SingleChat extends Application {
     *   Esta classe é a janela inicial do aplicativo
     *   Ela só abre, pede usuário e senha, e encerra
     */
-    
+    private static final String IPSERVIDOR = "169.254.241.240";
     
     @Override
     public void start(Stage primaryStage) {
@@ -85,6 +90,7 @@ public class SingleChat extends Application {
                 else{
                     actiontarget.setFill(Color.BLUE);
                     actiontarget.setText("LOGON");
+                    autenticaUsuarioNoServidor(userTextField.getText(), IPSERVIDOR);
                     ListaAmigos listaAmigos = new ListaAmigos(userTextField.getText());
                     Stage sndStage = new Stage();
                     listaAmigos.start(sndStage);
@@ -100,6 +106,33 @@ public class SingleChat extends Application {
         primaryStage.show();
     }
 
+    
+    public void autenticaUsuarioNoServidor(String nome, String ipServidor){
+        Socket client;
+        try {
+            
+            //Logando usuário no servidor
+            client = new Socket(ipServidor, 6991);
+            
+            ObjectOutputStream request = new ObjectOutputStream(client.getOutputStream());
+            request.flush();
+            request.writeUTF("MASTER_PEER CONNECT "+nome);
+            request.close();
+            client.close();
+            
+            ServerSocket server = new ServerSocket(6992);
+            Socket cliente2 = server.accept();
+            ObjectInputStream streamRetorno = new ObjectInputStream(cliente2.getInputStream());
+            String listaDeAmigos = streamRetorno.readUTF();
+            System.out.println(listaDeAmigos);
+            
+            
+        } catch (IOException ex) {
+            
+        }
+    }
+    
+    
     /**
      * @param args the command line arguments
      */
