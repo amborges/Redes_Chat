@@ -28,7 +28,7 @@ public class ServerLister extends Thread{
     
     ServerLister(String n, ListaAmigos la){
         try{
-            server = new ServerSocket(6991); //porta definida no protocolo
+            server = new ServerSocket(20000); //porta definida no protocolo
             userName = n;
             programa = la;
         }catch(Exception e){

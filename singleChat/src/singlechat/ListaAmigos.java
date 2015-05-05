@@ -51,7 +51,7 @@ public class ListaAmigos extends Application{
     ListaAmigos(String s, LinkedList<SingleChat.Peers> listaPeers){
         userName = s;
         IPs = new ArrayList<String>();
-        IPs.add("169.254.241.240"); //remover essa linha, é usada para testes
+        //IPs.add("169.254.241.240"); //remover essa linha, é usada para testes
         group = new ToggleGroup();
         serverLister = new ServerLister(userName, this);
         serverLister.start();
@@ -63,7 +63,7 @@ public class ListaAmigos extends Application{
     }
     
     ListaAmigos(String ip){
-        
+        System.out.println("IP:" +ip);
         IPs = new ArrayList<String>();
         IPs.add(""+ip+""); //remover essa linha, é usada para testes
         group = new ToggleGroup();
