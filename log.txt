@@ -1,0 +1,107 @@
+commit 1a61eb406460cd9c6ae9ca16cf16098e4676040c
+Author: tamarameneghetti <tmdcruz@inf.ufpel.edu.br>
+Date:   Tue May 5 13:16:50 2015 -0300
+
+     Readme com integrantes
+
+commit 185bc9950dd5501488bf62a0d423f0f90b883ade
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Tue May 5 09:49:16 2015 -0300
+
+    botoes funcionando da lista de amigos mas n abre janela de bate papo :/
+
+commit b648d0e06bc43d9c7f136c6052e62ecd7ca6042c
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Tue May 5 09:32:03 2015 -0300
+
+    feitas as melhorias comentandas no grupo
+
+commit 2d704c3fb5646543a6eb40c2975845c370fb2745
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Tue May 5 09:29:39 2015 -0300
+
+    adiocionando campos
+
+commit 6b4cf509561a2204f201bfaa952a9b74374b7731
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Tue May 5 09:27:08 2015 -0300
+
+    debugando
+
+commit 7afbf85f536d4f40d87878c33000970d3c07d485
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Tue May 5 09:23:04 2015 -0300
+
+    arrumando server
+
+commit d394533aac06e63999c4a7840040f76bdb76edbb
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Tue May 5 09:19:32 2015 -0300
+
+    resolvendo problema da nao abertura das janelas
+
+commit 33a82be4830eba87985c996ed6cf72d4a9cd9439
+Author: lucas <lucas@169.254.166.144>
+Date:   Tue May 5 08:22:27 2015 -0300
+
+    Chat meio caminho 4
+
+commit 85e74bce22a2df32a3fd6590edcb9551c94092f3
+Author: lucas <lucas@169.254.166.144>
+Date:   Tue May 5 07:50:43 2015 -0300
+
+    Chat meio caminho 3
+
+commit 4944c1d68dbc2320b6145d48860fc019dd1b02a6
+Author: lucas <lucas@169.254.166.144>
+Date:   Tue May 5 05:53:33 2015 -0300
+
+    Chat meio caminho 2
+
+commit f7b1cac7d4fee2ac9461d07d4ce6ec2923157e24
+Author: lucas <lucas@169.254.166.144>
+Date:   Tue May 5 05:27:00 2015 -0300
+
+    Chat meio caminho
+
+commit e4f1a00578b578de8e8f55ae8879683845c66d04
+Author: lucas <lucas@169.254.166.144>
+Date:   Tue May 5 03:08:16 2015 -0300
+
+    Agora anda os protocolos
+
+commit 3720220b6c4b4226eee60c9424f6ce6b81c09eeb
+Author: lucas <lucas@macbookosbonine.home>
+Date:   Mon May 4 21:51:39 2015 -0300
+
+    Atualização das portas e agora a msg vai
+
+commit c4cd83e9460d14ee27108684a34d11cf4e55c7d7
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Sun May 3 10:06:33 2015 -0300
+
+    Chat mais completo, agora ele seleciona portas incrementalmente, chats nao sao abertos se ja ouver um aberto. Possui um server ouvindo chamadas de chat, nao sei se funciona, pois nao tenho ninguem em rede. Eh preciso complementar o software conforme o protocolo
+
+commit 2b75a5cf8a6f20009414058dc2e77948f5c7cf74
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Sat May 2 08:21:58 2015 -0300
+
+    Chat nao abre duas vezes, mas ainda tem o problema dos lado servidor de cada chat que nao encerra junto
+
+commit d56d8fc368da4f9f2adc808307b88d977988d8a3
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Sat May 2 07:34:56 2015 -0300
+
+    Sistema conversa consigo mesmo, ou seja, ao selecionar enviar uma mensagem de texto, o lado servidor do chat ouve e envia uma mensagem automatica. Apenas uma vez, estou tentando descobrir o que acontece que ele nao faz isso mais vezes. E mais, Ainda temos que fazer com que nao seja possivel abrir dois chats para um mesmo contato.
+
+commit c30ee45b02d0109a02a236eed62265dc43f9a6e3
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Mon Apr 27 20:04:41 2015 -0300
+
+    Foi adicionado uma janela de escolha de amigos onlines, e abre um chat pra cada amigo
+
+commit d4892750051646ee1ec688721fc21d9f12f67a01
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Sun Apr 19 14:54:57 2015 -0300
+
+    primeira versao de janelas do chat, eh preciso corrigir algumas falhas e inserir a comunicacao em rede
