@@ -39,8 +39,8 @@ public class SingleChat extends Application {
     *   Esta classe é a janela inicial do aplicativo
     *   Ela só abre, pede usuário e senha, e encerra
     */
-    private static final String IPSERVIDOR = "169.254.241.240";
-    
+    public static final String IPSERVIDOR = "localhost";
+    public static final int DOORSERVIDOR = 6969;
     
     @Override
     public void start(Stage primaryStage) {
@@ -92,11 +92,16 @@ public class SingleChat extends Application {
                 else{
                     actiontarget.setFill(Color.BLUE);
                     actiontarget.setText("LOGON");
-                    LinkedList<Peers> listaPeers = autenticaUsuarioNoServidor(userTextField.getText(), IPSERVIDOR);
-                    ListaAmigos listaAmigos = new ListaAmigos(userTextField.getText(), listaPeers);
-                    Stage sndStage = new Stage();
-                    listaAmigos.start(sndStage);
-                    primaryStage.close();
+                    
+                    try{
+                        LinkedList<Peers> listaPeers = autenticaUsuarioNoServidor(userTextField.getText(), IPSERVIDOR);
+                        ListaAmigos listaAmigos = new ListaAmigos(userTextField.getText(), pwBox.getText(), listaPeers);
+                        Stage sndStage = new Stage();
+                        listaAmigos.start(sndStage);
+                        primaryStage.close();
+                    } catch(Exception ex){
+                        System.out.println("Falha na autenticacao : " + ex);
+                    }
                 }
             }
         });

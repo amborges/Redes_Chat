@@ -1,3 +1,9 @@
+commit 441458fd0f57e37da55f440a9ff762b35ae426ac
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Tue May 5 13:38:55 2015 -0300
+
+    Complementando o arquivo README com informacoes sobre o repositorio online
+
 commit 1a61eb406460cd9c6ae9ca16cf16098e4676040c
 Author: tamarameneghetti <tmdcruz@inf.ufpel.edu.br>
 Date:   Tue May 5 13:16:50 2015 -0300

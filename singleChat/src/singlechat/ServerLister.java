@@ -50,13 +50,11 @@ public class ServerLister extends Thread{
                 String who = "ciclano";
                 
                 if(!programa.has(who)){
-                    
                     int friendDoor = 20000; //porta aleatória, definir corretamente depois
                     JanelaChat newWindow = new JanelaChat(userName, who, programa.getPorta(), friendDoor, who, programa);
                     Stage sndStage = new Stage();
                     newWindow.start(sndStage);
-                    programa.include(who);
-                    
+                    programa.include(who); 
                 }
                 
                 client.close();

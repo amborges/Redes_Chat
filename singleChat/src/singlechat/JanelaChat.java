@@ -33,6 +33,8 @@ public class JanelaChat extends Application{
     */
     
     private String userName; //meu nome
+    private PeerData.Peer friend; //mey amigo
+    
     private TextArea chatHistory; //área de conversa
     private TextArea msg; //area de escrever a mensagem
     private int mydoor; //minha porta
@@ -58,10 +60,15 @@ public class JanelaChat extends Application{
         programa = la;
     }
     
+    JanelaChat(String setName, PeerData.Peer setPeer) throws Exception{
+        userName = setName;
+        friend = setPeer;
+    }
+    
     @Override
     public void start(Stage primaryStage) {
         //COLOCANDO PRA FUNCIONAR AS APLICAÇÔES PARALELAS
-        server.start(); //o servidor fica rodando a parte, ouvindo conversa
+        //server.start(); //o servidor fica rodando a parte, ouvindo conversa
         //FIM DAS APLICAÇÔES PARALELAS
         
         GridPane grid = new GridPane();
@@ -153,6 +160,7 @@ public class JanelaChat extends Application{
                 }
                 else
                     client = new Socket(friendIP, friendDoor);
+                
                 //ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
                 ObjectOutputStream sender = new ObjectOutputStream(client.getOutputStream());
                 sender.flush();
