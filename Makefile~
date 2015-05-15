@@ -1,0 +1,4 @@
+all:
+	javac PeerMaster.java
+	javac PeerData.java
+	java PeerMaster

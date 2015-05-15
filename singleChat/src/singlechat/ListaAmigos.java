@@ -70,7 +70,7 @@ public class ListaAmigos extends Application{
         IPs = new ArrayList<String>();
         //IPs.add("169.254.241.240"); //remover essa linha, é usada para testes
         group = new ToggleGroup();
-        serverLister = new ServerLister(userName, this);
+        //serverLister = new ServerLister(userName, this);
         //serverLister.start();
         
         openChat = new ArrayList<String>();
@@ -87,7 +87,7 @@ public class ListaAmigos extends Application{
         IPs = new ArrayList<String>();
         IPs.add(""+ip+""); //remover essa linha, é usada para testes
         group = new ToggleGroup();
-        serverLister = new ServerLister(userName, this);
+        //serverLister = new ServerLister(userName, this);
         //serverLister.start();
         
         openChat = new ArrayList<String>();
@@ -113,8 +113,8 @@ public class ListaAmigos extends Application{
         group = new ToggleGroup();
         openChat = old.openChat;
         porta = old.porta;
-        serverLister = old.serverLister;
-        serverLister.updateListaAmigos(this);
+        //serverLister = old.serverLister;
+        //serverLister.updateListaAmigos(this);
     }
     
     @Override
@@ -149,7 +149,7 @@ public class ListaAmigos extends Application{
                 }
                 */
                 try{
-                    String msgT = "MASTER_PEER CONNECT PEER_NAME\n\n";
+                    String msgT = "MASTER_PEER CONNECT " + userName + "\n\n";
                     Socket client = new Socket(SingleChat.IPSERVIDOR, SingleChat.DOORSERVIDOR);
                     ObjectOutputStream sender = new ObjectOutputStream(client.getOutputStream());
                     sender.flush();
@@ -265,8 +265,8 @@ public class ListaAmigos extends Application{
         IPs = new ArrayList<String>();
         IPs.add(peer.ip);
         
-        serverLister = new ServerLister(peer.nome, this);
-        serverLister.start();
+        //serverLister = new ServerLister(peer.nome, this);
+        //serverLister.start();
         
         openChat = new ArrayList<String>();
         porta = peer.porta; //porta inicial
@@ -293,6 +293,7 @@ public class ListaAmigos extends Application{
         //atualiza a lista de amigos onlines
         //cada array é no formato
         //<PEER_ID>,<PEER_NAME>,<PEER_IP>,<PEER_STATUS>,<PEER_KEY>
+        System.out.println(peer[0]);
         if(!onlineFriends.isEmpty()){
             onlineFriends.clear();
             listaAmigos.clear();

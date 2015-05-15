@@ -58,7 +58,7 @@ public class PeerData {
         aux.name    = pd[1];
         aux.ip      = pd[2];
         aux.status  = pd[3];
-        aux.key     = pd[4];
+        //aux.key     = pd[4];
         peer.add(aux);
     }
     public void remove(String name){

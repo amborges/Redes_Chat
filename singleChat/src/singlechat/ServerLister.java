@@ -21,7 +21,7 @@ public class ServerLister extends Thread{
     *   Ela precisa se adequar ao protocolo
     */
     
-    private ServerSocket server;
+    /*private ServerSocket server;
     private Socket client;
     private String userName;
     private ListaAmigos programa;
@@ -62,5 +62,5 @@ public class ServerLister extends Thread{
                 System.out.println("FALHA CONECTAR NO SERVIDOR: " + e);
             }
         }
-    }
+    }*/
 }

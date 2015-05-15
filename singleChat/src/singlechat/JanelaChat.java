@@ -56,7 +56,7 @@ public class JanelaChat extends Application{
         friendName = friendname;
         mydoor = myporta;
         friendDoor = friendporta;
-        server = new ServerSide(mydoor, this);
+        //server = new ServerSide(mydoor, this);
         programa = la;
     }
     
