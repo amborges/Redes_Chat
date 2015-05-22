@@ -36,12 +36,12 @@ public class Servidor extends Thread{
             server = new ServerSocket(6991); //porta definida no protocolo
             name = setName;
             id = name.hashCode();
-            ip = server.getInetAddress();
+            ip = InetAddress.getLocalHost();//server.getInetAddress();
             key = setKey;
             program = setProgram;
             
-            returnToClient(SingleChat.IPSERVIDOR, "MASTER_PEER CONNECT " + name);
-            
+            returnToClient(SingleChat.IPSERVIDOR, "MASTER_PEER CONNECT " + name + "\n\n");
+            System.out.println("meu ip eh " + ip.toString());
         }catch(Exception e){
             System.out.println("FALHA ALOCAR NO SERVIDOR PRINCIPAL: " + e);
         }
@@ -51,7 +51,8 @@ public class Servidor extends Thread{
     public void finalize(){
         System.out.println("SERVIDOR DESATIVADO");
         //quando vai ser excluido, manda uma mensagem ao servidor
-        String msg = "MASTER_PEER DISCONNECT " + ip.toString() + "\n";
+        String myIP = (ip.toString().split("/"))[1];
+        String msg = "MASTER_PEER DISCONNECT " + name + "\n\n";
         returnToClient(serverip, msg);
     }
     

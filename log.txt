@@ -1,3 +1,27 @@
+commit 07a80fc8753a8855f0ad7e8562735922841b934f
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Fri May 15 09:45:46 2015 -0300
+
+    Servidores unificados, deixei o masterpeer em um pacote a parte, ele possui uma classe peerdata, que eh similar ao peerdata que temos no projeto principal, que eu criei ontem. Estou tentando resolver um problema do masterpeer de nao adicionar pessoas novas (lixo) quando eu faco uma requisicao. Eu acho que eh apenas um detalhe. Nao exclui os servidores antigos, apenas deixei eles comentados. Precisamos adequar todo o programa para trabalhar com o mesmo peerdata. Ainda nao testei abrir a janela de chat, e removi o uso do radiobutton. No trabalho de DS o Paulo usou um listener num combobox, estou tentando fazer o mesmo: sempre que o listaAmigos atualiza, o combobox atualiza junto. Vamos ver se consigo
+
+commit d2f59efad7042a713b02cbe010540640a1690fe7
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Thu May 14 23:44:28 2015 -0300
+
+    Codigo atualizado, usando um unico servidor, codigos originais ainda intactos, alterando o master peer para trabalhar corretamente conforme o protocolo, e ajustando o servidor para receber chamadas unicas. Codigo precisa ser finalizado, eu no momento estou tendo falha no masterpeer quando conecto. Atualizando git para manter historico.
+
+commit 14d5e51d8c0f220e3f81fe18062da7b0728e20d7
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Wed May 13 23:19:50 2015 -0300
+
+    adicionando o peer master
+
+commit c3e672218a562052c1291c0c3fe03e48a821903b
+Author: lucas <lucas@macbookosbonine>
+Date:   Tue May 5 22:17:44 2015 -0300
+
+    Testando nova conexão do socket
+
 commit 441458fd0f57e37da55f440a9ff762b35ae426ac
 Author: Alex Borges <amborges@inf.ufpel.edu.br>
 Date:   Tue May 5 13:38:55 2015 -0300

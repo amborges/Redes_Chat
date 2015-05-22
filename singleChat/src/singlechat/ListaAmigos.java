@@ -9,9 +9,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Vector;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -42,7 +41,8 @@ public class ListaAmigos extends Application{
     private String userName; //meu nome
     PeerData onlineFriends; //lista de amigos online
     ArrayList<String> listaAmigos; //nomes da galera que estão onlines
-    
+    ComboBox cbList; //combobox dos amigos onlines
+    Vector vectorFriends; //a ser usado em combinação com o combobox
     private ArrayList<String> IPs; //lista de IPS, é string pois uso o InetAddress
                                    //pra gerar o ip, formato esperado "x.x.x.x"
     
@@ -66,6 +66,7 @@ public class ListaAmigos extends Application{
         userName = setName;
         onlineFriends = new PeerData();
         listaAmigos = new ArrayList<String>();
+        vectorFriends = new Vector();
         
         IPs = new ArrayList<String>();
         //IPs.add("169.254.241.240"); //remover essa linha, é usada para testes
@@ -149,17 +150,23 @@ public class ListaAmigos extends Application{
                 }
                 */
                 try{
-                    String msgT = "MASTER_PEER CONNECT " + userName + "\n\n";
+                    String msgT = "MASTER_PEER UPDATE\n\n";
                     Socket client = new Socket(SingleChat.IPSERVIDOR, SingleChat.DOORSERVIDOR);
                     ObjectOutputStream sender = new ObjectOutputStream(client.getOutputStream());
                     sender.flush();
                     sender.writeUTF(msgT);
-                    sender.close();
+                    sender.close();                    
                 }catch(Exception ex){
                     System.out.println("Erro ao requisitar peers : " + ex);
                 }
+                
+                vectorFriends.clear();
+                for(int i = 0; i < onlineFriends.size(); i++){
+                    vectorFriends.add(onlineFriends.get(i));
+                }
             }
         });
+        
         grid.add(atualizaLista, 0, 0);
         
         Button btnChat = new Button();
@@ -205,23 +212,11 @@ public class ListaAmigos extends Application{
             grid.add(radios.get(i), 1, i + 1);
         }*/
         
-        //private void inicializarComboBoxGrandeArea() throws JAXBException {
+        
         ObservableList<String> onlineFriends = FXCollections.observableArrayList();
-        onlineFriends.addAll(listaAmigos);
+        onlineFriends.addAll(vectorFriends);
         
-        ComboBox cbList = new ComboBox();
-        cbList.setItems(onlineFriends);
-        cbList.valueProperty().addListener(new ChangeListener() {
-
-            @Override
-            public void changed(ObservableValue observable, Object grandeAreaAnterior, Object grandeAreaNova) {
-                //if (grandeAreaNova != null) {
-                    cbList.setItems(onlineFriends);
-                //}
-            }
-            
-        });
-        
+        cbList = new ComboBox(onlineFriends);
         grid.add(cbList, 1, 2);
     
         

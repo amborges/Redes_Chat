@@ -1,4 +1,3 @@
 all:
-	javac PeerMaster.java
-	javac PeerData.java
-	java PeerMaster
+	javac SERVER/*.java
+	java SERVER.PeerMaster
