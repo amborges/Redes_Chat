@@ -25,9 +25,9 @@ public class PeerData {
         public String key;
         private boolean inChat = false;
         private JanelaChat chat;
-        public void startChat(Stage stage, String setUserName){
+        public void startChat(Stage stage, ListaAmigos setParent){
             try{
-                chat = new JanelaChat(setUserName, this);
+                chat = new JanelaChat(setParent, this);
                 inChat = true;
                 chat.start(stage);
             } catch (Exception e){

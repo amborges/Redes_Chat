@@ -1,3 +1,9 @@
+commit be9c24962b540c5b46c403c042d1f0f8933d2a0b
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Fri May 22 00:03:11 2015 -0300
+
+    Algumas correcoes no servidor e masterpeer, masterpeer precisa desconectar o cliente, e adaptar os codigos para armazenarem os dados de chave publica. Ainda nao consegui fazer o combobox dinamico
+
 commit 07a80fc8753a8855f0ad7e8562735922841b934f
 Author: Alex Borges <amborges@inf.ufpel.edu.br>
 Date:   Fri May 15 09:45:46 2015 -0300

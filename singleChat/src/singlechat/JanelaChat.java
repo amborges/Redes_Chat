@@ -49,7 +49,7 @@ public class JanelaChat extends Application{
     CONTATO EM QUESTAO. E ATUALIZAR A VARIAVEL programa QUANDO HOUVER ATUALIZACAO
     DO OBJETO ListaAmigos
     */
-    
+    /*
     JanelaChat(String name, String numIP, int myporta, int friendporta, String friendname, ListaAmigos la) throws Exception{
         userName = name;
         friendIP = InetAddress.getByName(numIP);
@@ -64,12 +64,15 @@ public class JanelaChat extends Application{
         userName = setName;
         friend = setPeer;
     }
+    */
+    
+    JanelaChat(ListaAmigos setProgram, PeerData.Peer setFriend) throws Exception{
+        programa = setProgram;
+        friend = setFriend;
+    }
     
     @Override
     public void start(Stage primaryStage) {
-        //COLOCANDO PRA FUNCIONAR AS APLICAÇÔES PARALELAS
-        //server.start(); //o servidor fica rodando a parte, ouvindo conversa
-        //FIM DAS APLICAÇÔES PARALELAS
         
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
