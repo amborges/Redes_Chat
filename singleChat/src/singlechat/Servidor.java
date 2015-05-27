@@ -31,7 +31,7 @@ public class Servidor extends Thread{
     String key; //senha do usuário do chat
     
     Servidor(String setName, String setKey, ListaAmigos setProgram){
-        System.out.println("SERVIDOR ATIVADO");
+        //System.out.println("SERVIDOR ATIVADO");
         try{
             //server = new ServerSocket(SingleChat.DOORSERVIDOR); //porta definida no protocolo
             server = new ServerSocket(SingleChat.DOORTEST); //TESTE
@@ -42,7 +42,7 @@ public class Servidor extends Thread{
             program = setProgram;
             
             returnToClient(SingleChat.IPSERVIDOR, "MASTER_PEER CONNECT " + name + " " + key + "\n\n");
-            System.out.println("meu ip eh " + ip.toString() + " senha = " + key);
+            //System.out.println("meu ip eh " + ip.toString() + " senha = " + key);
         }catch(Exception e){
             System.out.println("FALHA ALOCAR NO SERVIDOR PRINCIPAL: " + e);
         }
@@ -50,10 +50,10 @@ public class Servidor extends Thread{
     
     @Override
     public void finalize(){
-        System.out.println("SERVIDOR DESATIVADO");
+        //System.out.println("SERVIDOR DESATIVADO");
         //quando vai ser excluido, manda uma mensagem ao servidor
         String msg = "MASTER_PEER DISCONNECT " + name + "\n\n";
-        returnToClient(SingleChat.IPSERVIDOR, msg);
+        //returnToClient(SingleChat.IPSERVIDOR, msg);
     }
     
     @Override
@@ -61,7 +61,7 @@ public class Servidor extends Thread{
         while(true){
             try{
                 client = server.accept();
-                System.out.println("CHAT ESTA OUVINDO");
+                //System.out.println("CHAT ESTA OUVINDO");
                 ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
                 String msg = entrada.readUTF();
                 entrada.close();
@@ -76,7 +76,7 @@ public class Servidor extends Thread{
     
     private void trataMsg(String s){
         String m[] = s.split(" ");
-        System.out.println("["+s+"]");
+        //System.out.println("["+s+"]");
         //SEND_MSG <SIZE> <PEER_ID> <MSG>\n\n
         if(m[0].equals("SEND_MSG")){
             String msg = "";
@@ -115,9 +115,9 @@ public class Servidor extends Thread{
             InetAddress friend = InetAddress.getByName(friendIP);
             Socket retToClient;
             if(friendIP.equals("localhost")){
-                if(msg.contains("MASTER_PEER"))
+                if(msg.substring(0, 11).equals("MASTER_PEER")) //vai para o servidor
                    retToClient = new Socket(friend, SingleChat.DOORSERVIDOR); //TESTE
-                else
+                else //vai para o cliente (retorna pra mim mesmo
                     retToClient = new Socket(friend, SingleChat.DOORTEST); //TESTE
             }
             else

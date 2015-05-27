@@ -7,9 +7,6 @@ package singlechat;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Vector;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,8 +15,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -37,17 +32,17 @@ public class ListaAmigos extends Application{
     
     
     private Servidor theMatrix; //Servidor que tudo ouve
-    public String userName; //meu nome
+    static public String USERNAME; //meu nome
     PeerData onlineFriends; //lista de amigos online
     ComboBox cbList; //combobox dos amigos onlines
-    Vector vectorFriends; //a ser usado em combinação com o combobox
+    
     
     
     //esse método é para iniciar conversa com alguém, na verdade
     ListaAmigos(String setName, String setPass){
-        userName = setName;
+        USERNAME = setName;
         onlineFriends = new PeerData();
-        theMatrix = new Servidor(userName, setPass, this);
+        theMatrix = new Servidor(USERNAME, setPass, this);
         theMatrix.start();
     }
    
@@ -74,7 +69,7 @@ public class ListaAmigos extends Application{
             public void handle(ActionEvent e) {
                 try{
                     String msgT = "MASTER_PEER UPDATE\n\n";
-                    Socket client = new Socket(SingleChat.IPSERVIDOR, SingleChat.DOORTEST);
+                    Socket client = new Socket(SingleChat.IPSERVIDOR, SingleChat.DOORSERVIDOR);
                     ObjectOutputStream sender = new ObjectOutputStream(client.getOutputStream());
                     sender.flush();
                     sender.writeUTF(msgT);
@@ -110,11 +105,10 @@ public class ListaAmigos extends Application{
         //RENDERIZANDO TUDO!!
         /////////////////////////////////////////
         Scene scene = new Scene(grid, 800, 600);
-        primaryStage.setTitle("Welcome " + userName + " to singleChat!");
+        primaryStage.setTitle("Welcome " + USERNAME + " to singleChat!");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
-        
     }
     
     public void remove(String s){
@@ -134,7 +128,7 @@ public class ListaAmigos extends Application{
                 onlineFriends.get(peer.name).startChat(new Stage(), this);
             }
         }catch(Exception e){
-            System.out.println("Falha ao abrir chat: " + e);
+            System.out.println("LA_ Falha ao abrir chat: " + e);
         }
     }
     
@@ -152,7 +146,7 @@ public class ListaAmigos extends Application{
         //atualiza a lista de amigos onlines
         //cada array é no formato
         //<PEER_ID>,<PEER_NAME>,<PEER_IP>,<PEER_STATUS>,<PEER_KEY>
-        System.out.println(peer[0]);
+        //System.out.println(peer[0]);
         if(!onlineFriends.isEmpty()){
             onlineFriends.clear();
         }

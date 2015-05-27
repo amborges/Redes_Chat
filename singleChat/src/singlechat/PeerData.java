@@ -29,8 +29,8 @@ public class PeerData {
         private JanelaChat chat;
         public void startChat(Stage stage, ListaAmigos setParent){
             try{
-                chat = new JanelaChat(setParent, this);
                 inChat = true;
+                chat = new JanelaChat(setParent, this);
                 chat.start(stage);
             } catch (Exception e){
                 System.out.println("Falha ao abrir chat : " + e);

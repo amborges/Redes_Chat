@@ -32,14 +32,10 @@ public class JanelaChat extends Application{
     *   Esta classe é a janela de conversa, existe uma para cada contato aberto
     */
     
-    private String userName; //meu nome
     private PeerData.Peer friend; //mey amigo
     
     private TextArea chatHistory; //área de conversa
     private TextArea msg; //area de escrever a mensagem
-    private ServerSide server; //o servidor que ouve a conversa
-    private InetAddress friendIP; //ip do contato
-    private String friendName; //nome do meu conttato
     private ListaAmigos programa; //origem
     
     
@@ -99,15 +95,14 @@ public class JanelaChat extends Application{
             */
             @Override
             public void handle(ActionEvent e) {
-                programa.remove(friendName);
-                server.interrupt();
+                programa.remove(friend.name);
                 primaryStage.close();
             }
         });
         grid.add(close, 2, 3);
         
         Scene scene = new Scene(grid, 800, 600);
-        primaryStage.setTitle("Welcome " + userName + " to singleChat! :: " + friendName);
+        primaryStage.setTitle("Welcome " + ListaAmigos.USERNAME + " to singleChat! :: " + friend.name);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -126,7 +121,7 @@ public class JanelaChat extends Application{
                     + Calendar.getInstance().get(Calendar.SECOND);
             String msgT = texto.getText();
             
-            String textFinal = userName + "[" + hour + "]: " + msg.getText() + "\n";
+            String textFinal = ListaAmigos.USERNAME + "[" + hour + "]: " + msg.getText() + "\n";
                 //temos q otimizar a linha de baixo, pensando no caso de uma
                 //conversa longa, vai começar a ficar lento, deveria ter algo
                 //apenas para fazer um append/concat no textarea
@@ -134,12 +129,12 @@ public class JanelaChat extends Application{
             msg.clear();
             try{ //esse try, é pra enviar a mensagem ao amigo
                 Socket client;
-                if(friendIP.toString().equalsIgnoreCase("localhost/127.0.0.1")){
+                if(friend.ip.toString().equalsIgnoreCase("localhost/127.0.0.1")){
                     //Se entrou aqui, é pq é chat teste, fala consigo mesmo
-                    client = new Socket("localhost", SingleChat.DOORSERVIDOR); //TESTE
+                    client = new Socket("localhost", SingleChat.DOORTEST); //TESTE
                 }
                 else
-                    client = new Socket(friendIP, SingleChat.DOORSERVIDOR);
+                    client = new Socket(friend.ip, SingleChat.DOORSERVIDOR);
                 
                 //ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
                 ObjectOutputStream sender = new ObjectOutputStream(client.getOutputStream());
@@ -164,7 +159,7 @@ public class JanelaChat extends Application{
                 + Calendar.getInstance().get(Calendar.MINUTE) + ":"
                 + Calendar.getInstance().get(Calendar.SECOND);
 
-        String textFinal = friendName + "[" + hour + "]: " + friendMsg + "\n";
+        String textFinal = friend.name + "[" + hour + "]: " + friendMsg + "\n";
             //temos q otimizar a linha de baixo, pensando no caso de uma
             //conversa longa, vai começar a ficar lento, deveria ter algo
             //apenas para fazer um append/concat no textarea

@@ -1,3 +1,9 @@
+commit ed961e1fa6977047d60ac521df627fa2fe47347c
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Wed May 27 00:00:08 2015 -0300
+
+    Codigos limpos, agora estou corrigindo o codigo para permitir que eu mantenha um chat no mesmo computador que o peermaster, problemas com portas (ja que o protocolo manda ter apenas um, para testar eu estou usando uma porta testes, e preciso fazer nao ter colisoes por causa disso)
+
 commit eed188378c587d6812b0217378ac13ba2a9d06f4
 Author: Alex Borges <amborges@inf.ufpel.edu.br>
 Date:   Tue May 26 15:16:05 2015 -0300
