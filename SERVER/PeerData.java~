@@ -49,7 +49,6 @@ public class PeerData {
 	}
 	
 	public boolean contains(String name){
-		System.out.println("contains: " + name);
 		for(int i = 0; i < peer.size() - 1; i++){
 			if(peer.get(i).name.equals(name)){
 				return true;

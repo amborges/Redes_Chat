@@ -18,11 +18,13 @@ public class PeerData {
     //Basicamente ele vai ter algumas operações similares ao ArrayList<>
     
     public class Peer{
+            //atributos de um peer amigo
         public int id;
         public String name;
         public String ip;
         public String status;
         public String key;
+        public String friendIP;
         private boolean inChat = false;
         private JanelaChat chat;
         public void startChat(Stage stage, ListaAmigos setParent){
@@ -36,6 +38,7 @@ public class PeerData {
         }
         public void closeChat(){
             inChat = false;
+            chat = null;
         }
         public JanelaChat getChat(){
             if(inChat)
@@ -46,10 +49,12 @@ public class PeerData {
         public boolean inChat(){
             return inChat;
         }
+        public void sendText(String msg){
+            chat.listened(msg);
+        }
     };
     
     ArrayList<Peer> peer = new ArrayList<Peer>();
-    
     
     public void add(String peerData){
         String pd[] = peerData.split(",");
@@ -58,7 +63,7 @@ public class PeerData {
         aux.name    = pd[1];
         aux.ip      = pd[2];
         aux.status  = pd[3];
-        //aux.key     = pd[4];
+        aux.key     = pd[4];
         peer.add(aux);
     }
     public void remove(String name){
@@ -113,5 +118,4 @@ public class PeerData {
     public int size(){
         return peer.size();
     }
-    
 }

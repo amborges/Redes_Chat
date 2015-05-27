@@ -5,10 +5,6 @@
  */
 package singlechat;
 
-import java.net.ServerSocket;
-import java.net.Socket;
-import javafx.stage.Stage;
-
 /**
  *
  * @author alex

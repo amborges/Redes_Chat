@@ -37,34 +37,11 @@ public class JanelaChat extends Application{
     
     private TextArea chatHistory; //área de conversa
     private TextArea msg; //area de escrever a mensagem
-    private int mydoor; //minha porta
     private ServerSide server; //o servidor que ouve a conversa
     private InetAddress friendIP; //ip do contato
-    private int friendDoor; //porta do meu contato
     private String friendName; //nome do meu conttato
     private ListaAmigos programa; //origem
     
-    /*
-    É PRECISO REESCREVER ESSA CLASSE, QUANDO SE TRATA DE RECEBER O IP E PORTA DO
-    CONTATO EM QUESTAO. E ATUALIZAR A VARIAVEL programa QUANDO HOUVER ATUALIZACAO
-    DO OBJETO ListaAmigos
-    */
-    /*
-    JanelaChat(String name, String numIP, int myporta, int friendporta, String friendname, ListaAmigos la) throws Exception{
-        userName = name;
-        friendIP = InetAddress.getByName(numIP);
-        friendName = friendname;
-        mydoor = myporta;
-        friendDoor = friendporta;
-        //server = new ServerSide(mydoor, this);
-        programa = la;
-    }
-    
-    JanelaChat(String setName, PeerData.Peer setPeer) throws Exception{
-        userName = setName;
-        friend = setPeer;
-    }
-    */
     
     JanelaChat(ListaAmigos setProgram, PeerData.Peer setFriend) throws Exception{
         programa = setProgram;
@@ -159,10 +136,10 @@ public class JanelaChat extends Application{
                 Socket client;
                 if(friendIP.toString().equalsIgnoreCase("localhost/127.0.0.1")){
                     //Se entrou aqui, é pq é chat teste, fala consigo mesmo
-                    client = new Socket("localhost", mydoor);
+                    client = new Socket("localhost", SingleChat.DOORSERVIDOR); //TESTE
                 }
                 else
-                    client = new Socket(friendIP, friendDoor);
+                    client = new Socket(friendIP, SingleChat.DOORSERVIDOR);
                 
                 //ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
                 ObjectOutputStream sender = new ObjectOutputStream(client.getOutputStream());

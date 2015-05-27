@@ -10,38 +10,39 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.MessageDigest;
 
 /**
  *
  * @author alex
  */
 public class Servidor extends Thread{
-    //estatico
-    static String serverip = "localhost"; //servidor pré conhecido
     
     //propriedades
-    ServerSocket server;
-    Socket client;
+    ServerSocket server; //atributo ouvidor do servidor
+    Socket client; //atributo para responder as mensagens
     
-    ListaAmigos program;
+    ListaAmigos program; //aplicativo GUI principal
     
-    int id;
-    InetAddress ip;
-    String name;
-    String key;
+    //atributos do protocolo
+    int id; //identificador unico de rede, parte do protocolo
+    InetAddress ip; //endereço IP do cliente
+    String name; //nome do usuário que tá no chat
+    String key; //senha do usuário do chat
     
     Servidor(String setName, String setKey, ListaAmigos setProgram){
         System.out.println("SERVIDOR ATIVADO");
         try{
-            server = new ServerSocket(6991); //porta definida no protocolo
+            //server = new ServerSocket(SingleChat.DOORSERVIDOR); //porta definida no protocolo
+            server = new ServerSocket(SingleChat.DOORTEST); //TESTE
             name = setName;
             id = name.hashCode();
             ip = InetAddress.getLocalHost();//server.getInetAddress();
-            key = setKey;
+            key = sha1(setKey);
             program = setProgram;
             
-            returnToClient(SingleChat.IPSERVIDOR, "MASTER_PEER CONNECT " + name + "\n\n");
-            System.out.println("meu ip eh " + ip.toString());
+            returnToClient(SingleChat.IPSERVIDOR, "MASTER_PEER CONNECT " + name + " " + key + "\n\n");
+            System.out.println("meu ip eh " + ip.toString() + " senha = " + key);
         }catch(Exception e){
             System.out.println("FALHA ALOCAR NO SERVIDOR PRINCIPAL: " + e);
         }
@@ -51,9 +52,8 @@ public class Servidor extends Thread{
     public void finalize(){
         System.out.println("SERVIDOR DESATIVADO");
         //quando vai ser excluido, manda uma mensagem ao servidor
-        String myIP = (ip.toString().split("/"))[1];
         String msg = "MASTER_PEER DISCONNECT " + name + "\n\n";
-        returnToClient(serverip, msg);
+        returnToClient(SingleChat.IPSERVIDOR, msg);
     }
     
     @Override
@@ -92,8 +92,8 @@ public class Servidor extends Thread{
         //TALK_TO <PEER_ID>\n\n
         else if(m[0].equals("TALK_TO")){
             String friendip = m[1].replace("\n", "");
-            program.include(friendip);
             //responde ACCEPT_TALKING <MY_PEER_ID>\n\n
+            program.talkto(friendip, m[2]); //envia msg para a janela correta
             String recmsg = "ACCEPT_TALKING " + ip.toString() + "\n\n";
             returnToClient(friendip, recmsg);
         }
@@ -114,10 +114,14 @@ public class Servidor extends Thread{
         try{
             InetAddress friend = InetAddress.getByName(friendIP);
             Socket retToClient;
-            if(friendIP.equals("localhost"))
-                retToClient = new Socket(friend, 6969);
+            if(friendIP.equals("localhost")){
+                if(msg.contains("MASTER_PEER"))
+                   retToClient = new Socket(friend, SingleChat.DOORSERVIDOR); //TESTE
+                else
+                    retToClient = new Socket(friend, SingleChat.DOORTEST); //TESTE
+            }
             else
-                retToClient = new Socket(friend, 6991);
+                retToClient = new Socket(friend, SingleChat.DOORSERVIDOR);
             ObjectOutputStream sender = new ObjectOutputStream(retToClient.getOutputStream());
             sender.flush();
             sender.writeUTF(msg);
@@ -126,5 +130,22 @@ public class Servidor extends Thread{
         }catch(Exception e){
             System.out.println("Erro ao retornar msg ao amigo : " + e);
         }
+    }
+    
+    private String sha1(String s){
+        String senhaCriptografada = "";
+        try{
+            MessageDigest mDigest = MessageDigest.getInstance("SHA1");
+            byte[] result = mDigest.digest(s.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < result.length; i++) {
+                sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
+            }
+         
+            senhaCriptografada = sb.toString();
+        }catch(Exception e){
+            System.out.println("Falha ao criptografar a senha : " + e);
+        }
+        return senhaCriptografada;
     }
 }

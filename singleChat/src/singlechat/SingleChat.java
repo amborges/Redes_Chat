@@ -5,12 +5,6 @@
  */
 package singlechat;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.LinkedList;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -39,8 +33,9 @@ public class SingleChat extends Application {
     *   Esta classe é a janela inicial do aplicativo
     *   Ela só abre, pede usuário e senha, e encerra
     */
-    public static final String IPSERVIDOR = "localhost";
-    public static final int DOORSERVIDOR = 6969;
+    public static final String  IPSERVIDOR      = "localhost";
+    public static final int     DOORSERVIDOR    = 6991;
+    public static final int     DOORTEST        = 6969;
     
     @Override
     public void start(Stage primaryStage) {
@@ -94,8 +89,7 @@ public class SingleChat extends Application {
                     actiontarget.setText("LOGON");
                     
                     try{
-                        LinkedList<Peers> listaPeers = autenticaUsuarioNoServidor(userTextField.getText(), IPSERVIDOR);
-                        ListaAmigos listaAmigos = new ListaAmigos(userTextField.getText(), pwBox.getText(), listaPeers);
+                        ListaAmigos listaAmigos = new ListaAmigos(userTextField.getText(), pwBox.getText());
                         Stage sndStage = new Stage();
                         listaAmigos.start(sndStage);
                         primaryStage.close();
@@ -113,74 +107,6 @@ public class SingleChat extends Application {
         primaryStage.show();
     }
 
-    
-    public LinkedList<Peers> autenticaUsuarioNoServidor(String nome, String ipServidor){
-        Socket client;
-        LinkedList<Peers> listaPeers = new LinkedList<Peers>();
-        try {
-            
-            //Logando usuário no servidor
-            client = new Socket(ipServidor, 6991);
-            
-            ObjectOutputStream request = new ObjectOutputStream(client.getOutputStream());
-            request.flush();
-            request.writeUTF("MASTER_PEER CONNECT "+nome);
-            request.close();
-            client.close();
-            
-            //recuperando lista de usuarios
-            ServerSocket server = new ServerSocket(6992);
-            Socket cliente2 = server.accept();
-            ObjectInputStream streamRetorno = new ObjectInputStream(cliente2.getInputStream());
-            String listaDeAmigos = streamRetorno.readUTF();
-            
-            
-            String[] tokens = listaDeAmigos.split(" ");
-            
-            
-            int n=1;
-            int portaInicial = 20000;
-            for(int i=0; i<=tokens.length; i++){
-                if(i==n){
-                    Peers peer = new Peers(tokens[i], tokens[i+1], portaInicial);
-                    listaPeers.add(peer);
-                    n+=5;
-                    portaInicial+=1;
-                }
-            }
-            
-            for(Peers item : listaPeers){
-                System.out.println("Nome: "+item.nome);
-                System.out.println("IP: "+item.ip);
-                System.out.println();
-            }
-            
-            
-            
-            
-            
-        } catch (IOException ex) {
-            
-        }
-        return listaPeers;
-    }
-    
-    public class Peers{
-
-        public Peers(String nome, String ip, int porta) {
-            this.nome = nome;
-            this.ip = ip;
-            this.porta = porta;
-        }
-        
-        public String nome;
-        public String ip;
-        public int porta;
-        
-        
-    }
-    
-    
     
     /**
      * @param args the command line arguments

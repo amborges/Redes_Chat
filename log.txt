@@ -1,3 +1,9 @@
+commit eed188378c587d6812b0217378ac13ba2a9d06f4
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Tue May 26 15:16:05 2015 -0300
+
+    Codigo ajeitado para uso com um unico servidor, janela de amigos online ativo, falta limpar o codigo e testar em grupo para ver se esta ok, pois com um unico servidor local, nao consegui fazer ele falar consigo mesmo.
+
 commit be9c24962b540c5b46c403c042d1f0f8933d2a0b
 Author: Alex Borges <amborges@inf.ufpel.edu.br>
 Date:   Fri May 22 00:03:11 2015 -0300

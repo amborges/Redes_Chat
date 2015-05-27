@@ -39,73 +39,18 @@ public class ListaAmigos extends Application{
     private Servidor theMatrix; //Servidor que tudo ouve
     public String userName; //meu nome
     PeerData onlineFriends; //lista de amigos online
-    ArrayList<String> listaAmigos; //nomes da galera que estão onlines
     ComboBox cbList; //combobox dos amigos onlines
     Vector vectorFriends; //a ser usado em combinação com o combobox
-    private ArrayList<String> IPs; //lista de IPS, é string pois uso o InetAddress
-                                   //pra gerar o ip, formato esperado "x.x.x.x"
-    private ArrayList<JanelaChat> janelas;
     
-    /*
-    private final ToggleGroup group; //armazena os radio button
-    private ServerLister serverLister; //servidor para iniciar um chat novo
-    private ArrayList<String> openChat; //lista de chats abertos
-    private int porta; //porta disponivel para conversa
-    private LinkedList<SingleChat.Peers> listaPeers;
-    */
     
     //esse método é para iniciar conversa com alguém, na verdade
-    ListaAmigos(String setName, String setPass, LinkedList<SingleChat.Peers> listaPeers){
+    ListaAmigos(String setName, String setPass){
         userName = setName;
         onlineFriends = new PeerData();
-        listaAmigos = new ArrayList<String>();
         theMatrix = new Servidor(userName, setPass, this);
         theMatrix.start();
-        
-        //vectorFriends = new Vector();
-        //IPs = new ArrayList<String>();
-        //IPs.add("169.254.241.240"); //remover essa linha, é usada para testes
-        //group = new ToggleGroup();
-        //serverLister = new ServerLister(userName, this);
-        //serverLister.start();
-        //openChat = new ArrayList<String>();
-        //porta = 6991; //porta inicial
-        //this.listaPeers = listaPeers;
     }
-    
-   /*
-    ListaAmigos(String ip){
-        System.out.println("IP:" +ip);
-        IPs = new ArrayList<String>();
-        IPs.add(""+ip+""); //remover essa linha, é usada para testes
-        group = new ToggleGroup();
-        //serverLister = new ServerLister(userName, this);
-        //serverLister.start();
-        
-        openChat = new ArrayList<String>();
-        porta = 20000; //porta inicial
-    }
-
-    public ListaAmigos() {
-        this.group = null;
-    }
-    
-    ListaAmigos(ListaAmigos old){
-        /*
-        * Este construtor é obrigatório, pois não descobri como fazer um
-        * campo de atualização dinâmica, logo, é preciso fazer uma cópia da janela
-        * e renderizar ela novamente
-        
-        userName = old.userName;
-        IPs = old.IPs;
-        group = new ToggleGroup();
-        openChat = old.openChat;
-        porta = old.porta;
-        //serverLister = old.serverLister;
-        //serverLister.updateListaAmigos(this);
-    }
-    */
-
+   
     @Override
     public void start(Stage primaryStage) {
         GridPane grid = new GridPane();
@@ -127,22 +72,15 @@ public class ListaAmigos extends Application{
             */
             @Override
             public void handle(ActionEvent e) {
-                //ListaAmigos listaAmigos = new ListaAmigos(ListaAmigos.this);
-                
-                /*try {
-                    //listaAmigos.start(sndStage);
-                    exibeAmigos.start(sndStage);
-                } catch (Exception ex) {
-                    Logger.getLogger(ListaAmigos.class.getName()).log(Level.SEVERE, null, ex);
-                }*/
-                
                 try{
                     String msgT = "MASTER_PEER UPDATE\n\n";
-                    Socket client = new Socket(SingleChat.IPSERVIDOR, SingleChat.DOORSERVIDOR);
+                    Socket client = new Socket(SingleChat.IPSERVIDOR, SingleChat.DOORTEST);
                     ObjectOutputStream sender = new ObjectOutputStream(client.getOutputStream());
                     sender.flush();
                     sender.writeUTF(msgT);
-                    sender.close();       
+                    sender.close();   
+                    //Depois de obter a lista dos amigos, o atributo onlineFriends
+                    //é automaticamente atualizado, e se abre a janela pra escolher o amigo
                     ExibeAmigos exibeAmigos = new ExibeAmigos(onlineFriends, ListaAmigos.this);
                     Stage sndStage = new Stage();
                     exibeAmigos.start(sndStage);
@@ -151,28 +89,7 @@ public class ListaAmigos extends Application{
                 }
             }
         });
-        
         grid.add(atualizaLista, 0, 0);
-        
-        /*Button btnChat = new Button();
-        btnChat.setText("Iniciar Chat");
-        btnChat.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                //String who = ((RadioButton)group.getSelectedToggle()).getText();
-                
-                if(!onlineFriends.get(who).inChat()){
-                    try{
-                        Stage sndStage = new Stage();
-                        //onlineFriends.get(who).startChat(sndStage, userName);
-                    } catch(Exception ex){
-                        System.out.println("Falha ao abrir janela de chat : " + ex);
-                    }
-                }
-            }
-        });
-        grid.add(btnChat, 1, 0);
-        */
         
         Button closeChat = new Button();
         closeChat.setText("Fechar Chat");
@@ -202,56 +119,14 @@ public class ListaAmigos extends Application{
     
     public void remove(String s){
         //uma janela de chat foi fechada
-        /*
-        if(openChat.remove(s))
-            System.out.println(s + " removido com sucesso!");
-        else
-            System.out.println("Não foi possível remover " + s);
-        */
+        onlineFriends.get(s).closeChat();
     }
     
-    public void include(String s){
-        //uma janela de chat foi aberta
-        /*
-        openChat.add(s);
-        */
-    }
     
     public boolean has(String s){
         //retorna true se existe uma janela de chat com esse contato
-        /*
-        return openChat.contains(s);
-        */
         return onlineFriends.get(s).inChat();
     }
-    
-    /*
-    public int getPorta(){
-        //retorna a porta disponível para abrir um novo chat
-        int r = porta;
-        porta ++;
-        return r;
-    }
-    */
-    
-    /*
-    public void iniciaConversa(SingleChat.Peers peer){
-        IPs = new ArrayList<String>();
-        IPs.add(peer.ip);  
-        //serverLister = new ServerLister(peer.nome, this);
-        //serverLister.start();
-        openChat = new ArrayList<String>();
-        porta = peer.porta; //porta inicial
-        /*
-        if(!programa.has(who)){
-            int friendDoor = 20000; //porta aleatória, definir corretamente depois
-            JanelaChat newWindow = new JanelaChat(userName, who, programa.getPorta(), friendDoor, who, programa);
-            Stage sndStage = new Stage();
-            newWindow.start(sndStage);
-            programa.include(who); 
-        }*
-    }
-    */
     
     public void iniciaConversa(PeerData.Peer peer){
         try{
@@ -263,9 +138,14 @@ public class ListaAmigos extends Application{
         }
     }
     
-    
     public void talkto(String friendIP, String msg){
         //manda a msg pra janela certa
+        if(onlineFriends.get(friendIP).inChat())
+            onlineFriends.get(friendIP).sendText(msg);
+        else{
+            onlineFriends.get(friendIP).startChat(new Stage(), this);
+            onlineFriends.get(friendIP).sendText(msg);
+        }
     }
     
     public void reload(String peer[]){
@@ -275,12 +155,10 @@ public class ListaAmigos extends Application{
         System.out.println(peer[0]);
         if(!onlineFriends.isEmpty()){
             onlineFriends.clear();
-            listaAmigos.clear();
         }
         
         for(int i = 0; i < peer.length-1; i++){
             onlineFriends.add(peer[i]);
-            listaAmigos.add(onlineFriends.get(i).name);
         }
     }
 }

@@ -21,6 +21,7 @@ public class PeerData {
 		public String name;
 		public String ip;
 		public String status;
+		public String key;
 	};
 	
 	ArrayList<Peer> peer = new ArrayList<Peer>();
@@ -32,6 +33,7 @@ public class PeerData {
 		aux.name	= pd[1];
 		aux.ip	  = pd[2];
 		aux.status  = pd[3];
+		aux.key  = pd[4];
 		peer.add(aux);
 	}
 	public void remove(String name){
@@ -49,6 +51,7 @@ public class PeerData {
 	}
 	
 	public boolean contains(String name){
+	
 		for(int i = 0; i < peer.size() - 1; i++){
 			if(peer.get(i).name.equals(name)){
 				return true;

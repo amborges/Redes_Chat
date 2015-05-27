@@ -16,7 +16,7 @@ public class PeerMaster{
             Socket client;
 
             try{
-                server = new ServerSocket(6969);//6991);
+                server = new ServerSocket(6991);
                 listOfPeers = new PeerData();
                 while(true){
                     System.out.println("Antes da conexao!");
@@ -38,7 +38,8 @@ public class PeerMaster{
                         if(!listOfPeers.contains(msgSplit[2])){
                             System.out.println("CONECTANDO NOVO CLIENTE!");
                             listOfPeers.add(msgSplit[2].hashCode() + "," + 
-                                msgSplit[2] + "," + clientIP + ",true");
+                                msgSplit[2] + "," + clientIP + ",true," + 
+                                msgSplit[3].replaceAll("\n", ""));
                         }
                         returnPeers(clientIP);
                     }
@@ -71,12 +72,14 @@ public class PeerMaster{
                 msg += listOfPeers.get(i).id + "," +
                         listOfPeers.get(i).name.replaceAll("\n", "") + "," +
                         listOfPeers.get(i).ip.replaceAll("\n", "") + "," +
-                        listOfPeers.get(i).status + "," + "\n";
+                        listOfPeers.get(i).status + "," +
+                        listOfPeers.get(i).key + "," + "\n";
             }
             msg += "\n\n";
 
             try{
-                Socket client2 = new Socket(ip, 6991);
+                //Socket client2 = new Socket(ip, 6991);
+                Socket client2 = new Socket(ip, 6969); //TESTE
                 ObjectOutputStream saida = new ObjectOutputStream(client2.getOutputStream());
                 saida.flush();
                 //ObjectOutputStream saida = new ObjectOutputStream(c.getOutputStream());
