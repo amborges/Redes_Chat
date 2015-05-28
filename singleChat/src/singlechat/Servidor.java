@@ -34,7 +34,7 @@ public class Servidor extends Thread{
         //System.out.println("SERVIDOR ATIVADO");
         try{
             //server = new ServerSocket(SingleChat.DOORSERVIDOR); //porta definida no protocolo
-            server = new ServerSocket(SingleChat.DOORTEST); //TESTE
+            server = new ServerSocket(SingleChat.DOORSERVIDOR); //TESTE
             name = setName;
             id = name.hashCode();
             ip = InetAddress.getLocalHost();//server.getInetAddress();
@@ -113,15 +113,7 @@ public class Servidor extends Thread{
         */
         try{
             InetAddress friend = InetAddress.getByName(friendIP);
-            Socket retToClient;
-            if(friendIP.equals("localhost")){
-                if(msg.substring(0, 11).equals("MASTER_PEER")) //vai para o servidor
-                   retToClient = new Socket(friend, SingleChat.DOORSERVIDOR); //TESTE
-                else //vai para o cliente (retorna pra mim mesmo
-                    retToClient = new Socket(friend, SingleChat.DOORTEST); //TESTE
-            }
-            else
-                retToClient = new Socket(friend, SingleChat.DOORSERVIDOR);
+            Socket retToClient = new Socket(friend, SingleChat.DOORSERVIDOR);
             ObjectOutputStream sender = new ObjectOutputStream(retToClient.getOutputStream());
             sender.flush();
             sender.writeUTF(msg);

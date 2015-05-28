@@ -6,7 +6,6 @@
 package singlechat;
 
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Calendar;
 import javafx.application.Application;
@@ -128,14 +127,7 @@ public class JanelaChat extends Application{
             chatHistory.setText(chatHistory.getText().concat(textFinal));
             msg.clear();
             try{ //esse try, é pra enviar a mensagem ao amigo
-                Socket client;
-                if(friend.ip.toString().equalsIgnoreCase("localhost/127.0.0.1")){
-                    //Se entrou aqui, é pq é chat teste, fala consigo mesmo
-                    client = new Socket("localhost", SingleChat.DOORTEST); //TESTE
-                }
-                else
-                    client = new Socket(friend.ip, SingleChat.DOORSERVIDOR);
-                
+                Socket client = new Socket(friend.ip, SingleChat.DOORSERVIDOR);
                 //ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
                 ObjectOutputStream sender = new ObjectOutputStream(client.getOutputStream());
                 sender.flush();

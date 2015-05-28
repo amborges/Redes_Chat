@@ -32,14 +32,15 @@ public class PeerMaster{
                         //Cliente conectou e requisita a lista de peers
                         System.out.println("CLIENTE CONECTOU - RESPONDENDO OS PEERS ONLINE");
                         String clientIP = client.getInetAddress().toString().replaceAll("/","");
-                        msgSplit[2] = msgSplit[2].substring(0, msgSplit[2].length()-2); //removendo os \n\n
+                        msgSplit[2] = msgSplit[2].substring(0, msgSplit[2].length()); //removendo os \n\n
                         
                             //Por algum motivo, quando entra aqui pela segunda vez, ele aceita conexão
                         if(!listOfPeers.contains(msgSplit[2])){
                             System.out.println("CONECTANDO NOVO CLIENTE!");
-                            listOfPeers.add(msgSplit[2].hashCode() + "," + 
-                                msgSplit[2] + "," + clientIP + ",true," + 
-                                msgSplit[3].replaceAll("\n", ""));
+                            String dataPeer = msgSplit[2].hashCode() + "," + 
+                                msgSplit[2].replaceAll("\n","") + "," + clientIP + 
+                                ",true," + msgSplit[3].replaceAll("\n", "");
+                            listOfPeers.add(dataPeer);
                         }
                         returnPeers(clientIP);
                     }
@@ -82,9 +83,7 @@ public class PeerMaster{
                 Socket client2 = new Socket(ip, 6969); //TESTE
                 ObjectOutputStream saida = new ObjectOutputStream(client2.getOutputStream());
                 saida.flush();
-                //ObjectOutputStream saida = new ObjectOutputStream(c.getOutputStream());
-                //saida.flush();
-                System.out.println("   :: " + msg);
+                //System.out.println("   :: " + msg);
                 saida.writeUTF(msg);
                 saida.close();
             }catch(Exception e){

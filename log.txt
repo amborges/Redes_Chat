@@ -1,3 +1,9 @@
+commit 8492bd70df028e5e8c80eb1a2d0da500332691a0
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Wed May 27 15:11:27 2015 -0300
+
+    Codigo todo arrumado, falta fazer teste real usando varios computadores, pois nao consigo conversar comigo mesmo. Preciso ainda resolver o detalhe das respostas de cada mensagem, ainda nao olhei direito isso. em Servidor.java, metodo finalize, eu deixei uma linha comentada para ele nao excluir a pessoa do masterpeer, permitindo que eu possa obter essa pessoa em um segundo acesso. Isso me faz lembrar, o masterpeer nao devolve a ti mesmo quando tu acaba de entrar, isso pode significar que as pessoas nao obterao o contato da ultima pessoa que logou no chat. Eh preciso verificar depois o sistema de seguranca nas mensagens, a ser definida ainda
+
 commit ed961e1fa6977047d60ac521df627fa2fe47347c
 Author: Alex Borges <amborges@inf.ufpel.edu.br>
 Date:   Wed May 27 00:00:08 2015 -0300

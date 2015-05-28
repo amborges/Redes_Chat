@@ -79,8 +79,7 @@ public class PeerMaster{
             msg += "\n\n";
 
             try{
-                //Socket client2 = new Socket(ip, 6991);
-                Socket client2 = new Socket(ip, 6969); //TESTE
+                Socket client2 = new Socket(ip, 6991);
                 ObjectOutputStream saida = new ObjectOutputStream(client2.getOutputStream());
                 saida.flush();
                 //System.out.println("   :: " + msg);

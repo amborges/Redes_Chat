@@ -35,7 +35,6 @@ public class SingleChat extends Application {
     */
     public static final String  IPSERVIDOR      = "localhost";
     public static final int     DOORSERVIDOR    = 6991;
-    public static final int     DOORTEST        = 6969;
     
     @Override
     public void start(Stage primaryStage) {
