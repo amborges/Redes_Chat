@@ -41,7 +41,11 @@ public class PeerMaster{
                                 msgSplit[2].replaceAll("\n","") + "," + clientIP + 
                                 ",true," + msgSplit[3].replaceAll("\n", "");
                             listOfPeers.add(dataPeer);
+<<<<<<< HEAD
                         //}
+=======
+                       // }
+>>>>>>> 161c9e4fc4ad86224834c77ee9a9a54ef6fa7547
                         returnPeers(clientIP);
                     }
                     else if(msgSplit[0].equals("MASTER_PEER") && msgSplit[1].equals("DISCONNECT")){
