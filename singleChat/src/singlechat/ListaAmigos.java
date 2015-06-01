@@ -5,8 +5,6 @@
  */
 package singlechat;
 
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -150,6 +148,15 @@ public class ListaAmigos extends Application{
         
         for(int i = 0; i < peer.length-1; i++){
             onlineFriends.add(peer[i]);
+        }
+    }
+    
+    public void openChat(String id){
+        int theFriendID = Integer.parseInt(id);
+        if(onlineFriends.hasID(theFriendID)){
+            onlineFriends.getByID(theFriendID).startChat(new Stage(), this);
+            String recmsg = "ACCEPT_TALKING " + id + "\n\n";
+            Servidor.returnToClient(onlineFriends.getByID(theFriendID).friendIP, recmsg);
         }
     }
 }

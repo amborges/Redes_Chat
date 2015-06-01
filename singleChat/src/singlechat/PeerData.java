@@ -30,7 +30,6 @@ public class PeerData {
         public void startChat(Stage stage, ListaAmigos setParent){
             try{
                 inChat = true;
-                Servidor.returnToClient(friendIP, "TALK_TO " + id + "\n\n");
                 chat = new JanelaChat(setParent, this);
                 chat.start(stage);
             } catch (Exception e){
@@ -92,7 +91,7 @@ public class PeerData {
     
     public Peer get(String name){
         int pos = -1;
-        for(int i = 0; i < peer.size() - 1; i++){
+        for(int i = 0; i < peer.size(); i++){
             if(peer.get(i).name.equals(name)){
                 pos = i;
                 break;
@@ -104,6 +103,31 @@ public class PeerData {
         else
             return null;
     }
+    
+    public Peer getByID(int id){
+        int pos = -1;
+        for(int i = 0; i < peer.size(); i++){
+            if(peer.get(i).id == id){
+                pos = i;
+                break;
+            }
+        }
+        
+        if(pos != -1)
+            return peer.get(pos);
+        else
+            return null;
+    }
+    
+    public boolean hasID(int id){
+        for(int i = 0; i < peer.size(); i++){
+            if(peer.get(i).id == id){
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public Peer get(int i){
         return peer.get(i);
     }

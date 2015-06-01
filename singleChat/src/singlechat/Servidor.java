@@ -92,11 +92,9 @@ public class Servidor extends Thread{
         }
         //TALK_TO <PEER_ID>\n\n
         else if(m[0].equals("TALK_TO")){
-            String friendip = m[1].replace("\n", "");
+            String friendid = m[1].replace("\n", "");
             //responde ACCEPT_TALKING <MY_PEER_ID>\n\n
-            program.talkto(friendip, m[2]); //envia msg para a janela correta
-            String recmsg = "ACCEPT_TALKING " + ip.toString() + "\n\n";
-            returnToClient(friendip, recmsg);
+            program.openChat(friendid);
         }
         //PEER_GROUP (<PEER_ID>,<PEER_NAME>,<PEER_IP>,<PEER_STATUS>,<PEER_KEY>\n)+\n\n
         else if(m[0].equals("PEER_GROUP")){
