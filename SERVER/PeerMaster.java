@@ -35,13 +35,13 @@ public class PeerMaster{
                         msgSplit[2] = msgSplit[2].substring(0, msgSplit[2].length()); //removendo os \n\n
                         
                             //Por algum motivo, quando entra aqui pela segunda vez, ele aceita conexão
-                        if(!listOfPeers.contains(msgSplit[2])){
+                        //if(!listOfPeers.contains(msgSplit[2])){
                             System.out.println("CONECTANDO NOVO CLIENTE!");
                             String dataPeer = msgSplit[2].hashCode() + "," + 
                                 msgSplit[2].replaceAll("\n","") + "," + clientIP + 
                                 ",true," + msgSplit[3].replaceAll("\n", "");
                             listOfPeers.add(dataPeer);
-                        }
+                       // }
                         returnPeers(clientIP);
                     }
                     else if(msgSplit[0].equals("MASTER_PEER") && msgSplit[1].equals("DISCONNECT")){
