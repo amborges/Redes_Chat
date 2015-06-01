@@ -69,11 +69,7 @@ public class ListaAmigos extends Application{
             public void handle(ActionEvent e) {
                 try{
                     String msgT = "MASTER_PEER UPDATE\n\n";
-                    Socket client = new Socket(SingleChat.IPSERVIDOR, SingleChat.DOORSERVIDOR);
-                    ObjectOutputStream sender = new ObjectOutputStream(client.getOutputStream());
-                    sender.flush();
-                    sender.writeUTF(msgT);
-                    sender.close();   
+                    Servidor.returnToClient(SingleChat.IPSERVIDOR, msgT);
                     //Depois de obter a lista dos amigos, o atributo onlineFriends
                     //é automaticamente atualizado, e se abre a janela pra escolher o amigo
                     ExibeAmigos exibeAmigos = new ExibeAmigos(onlineFriends, ListaAmigos.this);
@@ -124,6 +120,7 @@ public class ListaAmigos extends Application{
     
     public void iniciaConversa(PeerData.Peer peer){
         try{
+            System.out.println(onlineFriends.get(peer.name).name);
             if(!onlineFriends.get(peer.name).inChat()){
                 onlineFriends.get(peer.name).startChat(new Stage(), this);
             }

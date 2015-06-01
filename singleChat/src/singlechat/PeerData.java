@@ -30,10 +30,11 @@ public class PeerData {
         public void startChat(Stage stage, ListaAmigos setParent){
             try{
                 inChat = true;
+                Servidor.returnToClient(friendIP, "TALK_TO " + id + "\n\n");
                 chat = new JanelaChat(setParent, this);
                 chat.start(stage);
             } catch (Exception e){
-                System.out.println("Falha ao abrir chat : " + e);
+                System.out.println("Falha ao abrir chat com " + name + " : " + e);
             }
         }
         public void closeChat(){

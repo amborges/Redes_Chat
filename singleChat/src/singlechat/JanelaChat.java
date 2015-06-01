@@ -127,13 +127,8 @@ public class JanelaChat extends Application{
             chatHistory.setText(chatHistory.getText().concat(textFinal));
             msg.clear();
             try{ //esse try, é pra enviar a mensagem ao amigo
-                Socket client = new Socket(friend.ip, SingleChat.DOORSERVIDOR);
-                //ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
-                ObjectOutputStream sender = new ObjectOutputStream(client.getOutputStream());
-                sender.flush();
-                sender.writeUTF(msgT);
-                sender.close();
-                //entrada.close();
+                String msgToFriend = "SEND_MSG " + msgT.length() + " " + friend.id + " " + msgT + "\n\n";
+                Servidor.returnToClient(friend.ip, msgToFriend);
             }catch(Exception e){
                 System.out.println("FALHA AO ENVIAR MENSAGEM: " + e);
             }

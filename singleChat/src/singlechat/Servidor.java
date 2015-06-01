@@ -108,12 +108,11 @@ public class Servidor extends Thread{
         }       
     }
     
-    private void returnToClient(String friendIP, String msg){
+    public static void returnToClient(String friendIP, String msg){
         /*
         Realiza o retorno de uma mensagem ao cliente
         */
         try{
-            
             InetAddress friend = InetAddress.getByName(friendIP);
             Socket retToClient = new Socket(friend, SingleChat.DOORSERVIDOR);
             
