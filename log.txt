@@ -1,3 +1,9 @@
+commit c3da23a636cdf90005e6e8f42faf57ed1aa9397d
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Thu May 28 19:59:52 2015 -0300
+
+    removi todas as portas extras utilizadas para testar na mesma maquina o singleChat e o peerMaster, apartir de agora ambos devem ser executados em maquinas separadas.
+
 commit 8492bd70df028e5e8c80eb1a2d0da500332691a0
 Author: Alex Borges <amborges@inf.ufpel.edu.br>
 Date:   Wed May 27 15:11:27 2015 -0300

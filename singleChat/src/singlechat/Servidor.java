@@ -35,6 +35,7 @@ public class Servidor extends Thread{
         try{
             //server = new ServerSocket(SingleChat.DOORSERVIDOR); //porta definida no protocolo
             server = new ServerSocket(SingleChat.DOORSERVIDOR); //TESTE
+            
             name = setName;
             id = name.hashCode();
             ip = InetAddress.getLocalHost();//server.getInetAddress();
@@ -53,7 +54,7 @@ public class Servidor extends Thread{
         //System.out.println("SERVIDOR DESATIVADO");
         //quando vai ser excluido, manda uma mensagem ao servidor
         String msg = "MASTER_PEER DISCONNECT " + name + "\n\n";
-        //returnToClient(SingleChat.IPSERVIDOR, msg);
+        returnToClient(SingleChat.IPSERVIDOR, msg);
     }
     
     @Override
@@ -112,8 +113,10 @@ public class Servidor extends Thread{
         Realiza o retorno de uma mensagem ao cliente
         */
         try{
+            
             InetAddress friend = InetAddress.getByName(friendIP);
             Socket retToClient = new Socket(friend, SingleChat.DOORSERVIDOR);
+            
             ObjectOutputStream sender = new ObjectOutputStream(retToClient.getOutputStream());
             sender.flush();
             sender.writeUTF(msg);
