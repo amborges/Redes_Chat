@@ -33,7 +33,7 @@ public class SingleChat extends Application {
     *   Esta classe é a janela inicial do aplicativo
     *   Ela só abre, pede usuário e senha, e encerra
     */
-    public static final String  IPSERVIDOR      = "192.168.161.248";
+    public static final String  IPSERVIDOR      = "192.168.137.79";
     public static final int     DOORSERVIDOR    = 6991;
     
     @Override

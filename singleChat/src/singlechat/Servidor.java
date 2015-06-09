@@ -68,9 +68,7 @@ public class Servidor extends Thread{
                 ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
                 String msg = entrada.readUTF();
                 entrada.close();
-                
                 trataMsg(msg);
-                
             }catch(Exception e){
                 System.out.println("Falha ao ouvir : " + e);
             }
@@ -84,7 +82,7 @@ public class Servidor extends Thread{
         if(m[0].equals("SEND_MSG")){
             String msg = "";
                 //Removo a <MSG> do resto
-            for(int i = 3; i < m.length - 1; i++)
+            for(int i = 3; i < m.length; i++)
                 msg += m[i];
             msg = msg.replace("\n", "");
             program.talkto(m[2], msg);
@@ -138,7 +136,6 @@ public class Servidor extends Thread{
             sender.writeUTF("MASTER_PEER CONNECT " + name + " " + key + "\n\n");
             sender.close();
             retToClient.close();
-            System.out.println("Fechou ConnectToClient");
         }catch(Exception e){
             System.out.println("Erro ao retornar msg ao amigo : " + e);
         }

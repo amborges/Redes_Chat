@@ -128,13 +128,15 @@ public class ListaAmigos extends Application{
         }
     }
     
-    public void talkto(String friendIP, String msg){
+    public void talkto(String friendID, String msg){
         //manda a msg pra janela certa
-        if(onlineFriends.get(friendIP).inChat())
-            onlineFriends.get(friendIP).sendText(msg);
-        else{
-            onlineFriends.get(friendIP).startChat(new Stage(), this);
-            onlineFriends.get(friendIP).sendText(msg);
+        System.out.println("PRONTO PRA CONVERSAR com: " + friendID + " msg: " + msg);
+        int id = Integer.parseInt(friendID);
+        if(onlineFriends.getByID(id).inChat()) //se há uma janela aberta
+            onlineFriends.getByID(id).sendText(msg);
+        else{ //cria uma janela e inicia a conversa
+            onlineFriends.getByID(id).startChat(new Stage(), this);
+            onlineFriends.getByID(id).sendText(msg);
         }
     }
     
