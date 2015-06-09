@@ -38,7 +38,7 @@ public class PeerMaster{
                         msgSplit[2].replaceAll("\n","") + "," + clientIP + 
                         ",true," + msgSplit[3].replaceAll("\n", "");
                     listOfPeers.add(dataPeer);
-
+					//listOfPeers.printAllPeers();
                     returnPeers(); //manda pra todo mundo
                 }
                 else if(msgSplit[0].equals("MASTER_PEER") && msgSplit[1].equals("DISCONNECT")){
@@ -73,6 +73,8 @@ public class PeerMaster{
             }
             msg += "\n\n";
             
+			System.out.println(msg);
+			
             for(int i = 0; i < listOfPeers.size(); i++){
                 System.out.println("Sending peers to " + listOfPeers.get(i).name);
                 answer(listOfPeers.get(i).ip, msg);
@@ -81,8 +83,9 @@ public class PeerMaster{
     }
     
     public static void returnPeers(String ip){
-        if(!listOfPeers.isEmpty()){
-            listOfPeers.printAllPeers();
+        
+		if(!listOfPeers.isEmpty()){
+            
             String msg = "PEER_GROUP ";
             for(int i = 0; i < listOfPeers.size(); i++){
                 msg += listOfPeers.get(i).id + "," +

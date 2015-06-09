@@ -67,6 +67,7 @@ public class ListaAmigos extends Application{
             public void handle(ActionEvent e) {
                 try{
                     String msgT = "MASTER_PEER UPDATE\n\n";
+                    System.out.println(SingleChat.IPSERVIDOR);
                     Servidor.returnToClient(SingleChat.IPSERVIDOR, msgT);
                     //Depois de obter a lista dos amigos, o atributo onlineFriends
                     //é automaticamente atualizado, e se abre a janela pra escolher o amigo
@@ -146,7 +147,7 @@ public class ListaAmigos extends Application{
             onlineFriends.clear();
         }
         
-        for(int i = 0; i < peer.length-1; i++){
+        for(int i = 0; i < peer.length; i++){
             onlineFriends.add(peer[i]);
         }
     }

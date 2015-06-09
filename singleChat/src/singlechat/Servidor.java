@@ -42,7 +42,9 @@ public class Servidor extends Thread{
             key = sha1(setKey);
             program = setProgram;
             
-            returnToClient(SingleChat.IPSERVIDOR, "MASTER_PEER CONNECT " + name + " " + key + "\n\n");
+            connectToServer();
+            
+            //returnToClient(SingleChat.IPSERVIDOR, );
             //System.out.println("meu ip eh " + ip.toString() + " senha = " + key);
         }catch(Exception e){
             System.out.println("FALHA ALOCAR NO SERVIDOR PRINCIPAL: " + e);
@@ -112,6 +114,7 @@ public class Servidor extends Thread{
         */
         try{
             //InetAddress friend = InetAddress.getByName(friendIP);
+            //System.out.println(friendIP);
             Socket retToClient = new Socket(friendIP, SingleChat.DOORSERVIDOR);
             //Socket retToClient = new Socket("192.168.161.248", 6991);
             ObjectOutputStream sender = new ObjectOutputStream(retToClient.getOutputStream());
@@ -119,6 +122,23 @@ public class Servidor extends Thread{
             sender.writeUTF(msg);
             sender.close();
             retToClient.close();
+        }catch(Exception e){
+            System.out.println("Erro ao retornar msg ao amigo : " + e);
+        }
+    }
+    
+    public void connectToServer(){
+        /*
+        Realiza o retorno de uma mensagem ao cliente
+        */
+        try{
+            Socket retToClient = new Socket(SingleChat.IPSERVIDOR, SingleChat.DOORSERVIDOR);
+            ObjectOutputStream sender = new ObjectOutputStream(retToClient.getOutputStream());
+            sender.flush();
+            sender.writeUTF("MASTER_PEER CONNECT " + name + " " + key + "\n\n");
+            sender.close();
+            retToClient.close();
+            System.out.println("Fechou ConnectToClient");
         }catch(Exception e){
             System.out.println("Erro ao retornar msg ao amigo : " + e);
         }
