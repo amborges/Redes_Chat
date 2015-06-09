@@ -111,9 +111,9 @@ public class Servidor extends Thread{
         Realiza o retorno de uma mensagem ao cliente
         */
         try{
-            InetAddress friend = InetAddress.getByName(friendIP);
-            Socket retToClient = new Socket(friend, SingleChat.DOORSERVIDOR);
-            
+            //InetAddress friend = InetAddress.getByName(friendIP);
+            Socket retToClient = new Socket(friendIP, SingleChat.DOORSERVIDOR);
+            //Socket retToClient = new Socket("192.168.161.248", 6991);
             ObjectOutputStream sender = new ObjectOutputStream(retToClient.getOutputStream());
             sender.flush();
             sender.writeUTF(msg);

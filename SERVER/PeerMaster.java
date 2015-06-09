@@ -82,6 +82,7 @@ public class PeerMaster{
     
     public static void returnPeers(String ip){
         if(!listOfPeers.isEmpty()){
+            listOfPeers.printAllPeers();
             String msg = "PEER_GROUP ";
             for(int i = 0; i < listOfPeers.size(); i++){
                 msg += listOfPeers.get(i).id + "," +

@@ -1,3 +1,9 @@
+commit e427e868261a0c62ad39ebe6a59cd066d2c971e4
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Mon Jun 1 15:28:35 2015 -0300
+
+    peermaster otimizado e com todas as mensagens (testar se ainda da erro no ultimo usuario conectado). Ajustes gerais nas classes servidor e listaamigos (verificar se a mensagem vai para o amigo)
+
 commit 39c3c9e111a7a766cc474fbd9a00ddcb7eceb190
 Merge: e8f6fee 161c9e4
 Author: Alex Borges <amborges@inf.ufpel.edu.br>
