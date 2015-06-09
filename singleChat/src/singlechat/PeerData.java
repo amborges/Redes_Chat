@@ -13,6 +13,10 @@ import javafx.stage.Stage;
  * @author alex
  */
 public class PeerData {
+
+    public PeerData() {
+        this.peer = new ArrayList<>();
+    }
     //Vai ser a nossa struct, para armazenar os dados:
     //<PEER_ID>,<PEER_NAME>,<PEER_IP>,<PEER_STATUS>,<PEER_KEY>
     //Basicamente ele vai ter algumas operações similares ao ArrayList<>
@@ -54,7 +58,7 @@ public class PeerData {
         }
     };
     
-    ArrayList<Peer> peer = new ArrayList<Peer>();
+    ArrayList<Peer> peer;
     
     public void add(String peerData){
         String pd[] = peerData.split(",");
@@ -67,6 +71,12 @@ public class PeerData {
         peer.add(aux);
     }
     public void remove(String name){
+        for(Peer peer1 : peer){
+            if(peer1.name.equals(name))
+                peer.remove(peer1);
+        }
+        
+        /*
         int pos = -1;
         for(int i = 0; i < peer.size() - 1; i++){
             if(peer.get(i).name.equals(name)){
@@ -78,18 +88,32 @@ public class PeerData {
         if(pos != -1){
             peer.remove(pos);
         }
+        */
     }
     
     public boolean contains(String name){
+        for(Peer peer1 : peer){
+            if(peer1.name.equals(name))
+                return true;
+        }
+        return false;
+        /*
         for(int i = 0; i < peer.size() - 1; i++){
             if(peer.get(i).name.equals(name)){
                 return true;
             }
         }
         return false;
+        */
     }
     
     public Peer get(String name){
+        for(Peer peer1 : peer){
+            if(peer1.name.equals(name))
+                return peer1;
+        }
+        return null;
+        /*
         int pos = -1;
         for(int i = 0; i < peer.size(); i++){
             if(peer.get(i).name.equals(name)){
@@ -102,10 +126,17 @@ public class PeerData {
             return peer.get(pos);
         else
             return null;
+        */
     }
     
     public Peer getByID(int id){
-        int pos = -1;
+        for(Peer peer1 : peer){
+            if(peer1.id == id)
+                return peer1;
+        }
+        return null;
+        
+        /*int pos = -1;
         for(int i = 0; i < peer.size(); i++){
             if(peer.get(i).id == id){
                 pos = i;
@@ -117,11 +148,12 @@ public class PeerData {
             return peer.get(pos);
         else
             return null;
+        */
     }
     
     public boolean hasID(int id){
-        for(int i = 0; i < peer.size(); i++){
-            if(peer.get(i).id == id){
+        for (Peer peer1 : peer) {
+            if (peer1.id == id) {
                 return true;
             }
         }
