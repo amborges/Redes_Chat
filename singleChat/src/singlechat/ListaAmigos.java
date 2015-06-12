@@ -31,6 +31,7 @@ public class ListaAmigos extends Application{
     
     private Servidor theMatrix; //Servidor que tudo ouve
     static public String USERNAME; //meu nome
+    static public int USERID; //meu ID
     PeerData onlineFriends; //lista de amigos online
     ComboBox cbList; //combobox dos amigos onlines
     
@@ -39,6 +40,7 @@ public class ListaAmigos extends Application{
     //esse método é para iniciar conversa com alguém, na verdade
     ListaAmigos(String setName, String setPass){
         USERNAME = setName;
+        USERID = setName.hashCode();
         onlineFriends = new PeerData();
         theMatrix = new Servidor(USERNAME, setPass, this);
         theMatrix.start();
@@ -118,6 +120,7 @@ public class ListaAmigos extends Application{
     }
     
     public void iniciaConversa(PeerData.Peer peer){
+        System.out.println("entrou em inicia conversa");
         try{
             System.out.println(onlineFriends.get(peer.name).name);
             if(!onlineFriends.get(peer.name).inChat()){
@@ -130,10 +133,14 @@ public class ListaAmigos extends Application{
     
     public void talkto(String friendID, String msg){
         //manda a msg pra janela certa
-        System.out.println("PRONTO PRA CONVERSAR com: " + friendID + " msg: " + msg);
         int id = Integer.parseInt(friendID);
-        if(onlineFriends.getByID(id).inChat()) //se há uma janela aberta
-            onlineFriends.getByID(id).sendText(msg);
+        
+        //onlineFriends.printPeers();
+        //System.out.println("o id do meu amigo eh " + id);
+        
+        if(onlineFriends.getByID(id).inChat()){ //se há uma janela aberta
+           onlineFriends.getByID(id).sendText(msg);
+        }
         else{ //cria uma janela e inicia a conversa
             onlineFriends.getByID(id).startChat(new Stage(), this);
             onlineFriends.getByID(id).sendText(msg);
@@ -155,6 +162,7 @@ public class ListaAmigos extends Application{
     }
     
     public void openChat(String id){
+        System.out.println("entrou em openchat");
         int theFriendID = Integer.parseInt(id);
         if(onlineFriends.hasID(theFriendID)){
             onlineFriends.getByID(theFriendID).startChat(new Stage(), this);

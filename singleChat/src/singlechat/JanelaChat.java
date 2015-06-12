@@ -127,7 +127,7 @@ public class JanelaChat extends Application{
             chatHistory.setText(chatHistory.getText().concat(textFinal));
             msg.clear();
             try{ //esse try, é pra enviar a mensagem ao amigo
-                String msgToFriend = "SEND_MSG " + msgT.length() + " " + friend.id + " " + msgT + "\n\n";
+                String msgToFriend = "SEND_MSG " + msgT.length() + " " + ListaAmigos.USERID + " " + msgT + "\n\n";
                 Servidor.returnToClient(friend.ip, msgToFriend);
             }catch(Exception e){
                 System.out.println("FALHA AO ENVIAR MENSAGEM: " + e);

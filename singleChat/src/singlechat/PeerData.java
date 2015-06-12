@@ -29,7 +29,7 @@ public class PeerData {
         public String status;
         public String key;
         public String friendIP;
-        private boolean inChat = false;
+        public boolean inChat;
         private JanelaChat chat;
         public void startChat(Stage stage, ListaAmigos setParent){
             try{
@@ -174,5 +174,11 @@ public class PeerData {
     
     public int size(){
         return peer.size();
+    }
+    
+    public void printPeers(){
+        for(Peer a : peer){
+            System.out.println(a.name + ": " + a.id);
+        }
     }
 }

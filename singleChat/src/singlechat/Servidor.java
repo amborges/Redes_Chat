@@ -42,6 +42,7 @@ public class Servidor extends Thread{
             key = sha1(setKey);
             program = setProgram;
             
+            
             connectToServer();
             
             //returnToClient(SingleChat.IPSERVIDOR, );
