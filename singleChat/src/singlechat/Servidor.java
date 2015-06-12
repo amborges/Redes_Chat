@@ -84,7 +84,7 @@ public class Servidor extends Thread{
             String msg = "";
                 //Removo a <MSG> do resto
             for(int i = 3; i < m.length; i++)
-                msg += m[i];
+                msg += m[i]+ " ";
             msg = msg.replace("\n", "");
             program.talkto(m[2], msg);
             //responde RECV_MSG <MY_PEER_ID>\n\n
