@@ -120,14 +120,25 @@ public class ListaAmigos extends Application{
     }
     
     public void iniciaConversa(PeerData.Peer peer){
-        System.out.println("entrou em inicia conversa");
-        try{
-            System.out.println(onlineFriends.get(peer.name).name);
+        //System.out.println("entrou em inicia conversa");
+        /*try{
             if(!onlineFriends.get(peer.name).inChat()){
+                System.out.println("abre ou nao");
                 onlineFriends.get(peer.name).startChat(new Stage(), this);
             }
         }catch(Exception e){
             System.out.println("LA_ Falha ao abrir chat: " + e);
+        }*/
+        if(!onlineFriends.getByID(peer.id).inChat()){ //se há uma janela aberta
+          // onlineFriends.getByID(id).automaticStartChat(this);
+           Platform.runLater(new Runnable(){
+               @Override
+               public void run(){
+                   //ListaAmigos.this.iniciaConversa(ListaAmigos.this.onlineFriends.getByID(id));
+                   onlineFriends.getByID(peer.id).automaticStartChat(new Stage(), ListaAmigos.this);
+                   System.out.println("obaa ");
+               }
+           });
         }
     }
     
@@ -143,10 +154,8 @@ public class ListaAmigos extends Application{
                    //ListaAmigos.this.iniciaConversa(ListaAmigos.this.onlineFriends.getByID(id));
                    onlineFriends.getByID(id).automaticStartChat(new Stage(), ListaAmigos.this);
                    onlineFriends.getByID(id).sendText(msg);
-                   System.out.println("obaa ");
                }
            });
-            
         }
         else
             onlineFriends.getByID(id).sendText(msg);
