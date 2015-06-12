@@ -6,6 +6,7 @@
 package singlechat;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -34,7 +35,6 @@ public class ListaAmigos extends Application{
     static public int USERID; //meu ID
     PeerData onlineFriends; //lista de amigos online
     ComboBox cbList; //combobox dos amigos onlines
-    
     
     
     //esse método é para iniciar conversa com alguém, na verdade
@@ -135,16 +135,21 @@ public class ListaAmigos extends Application{
         //manda a msg pra janela certa
         int id = Integer.parseInt(friendID);
         
-        //onlineFriends.printPeers();
-        //System.out.println("o id do meu amigo eh " + id);
-        
-        if(onlineFriends.getByID(id).inChat()){ //se há uma janela aberta
-           onlineFriends.getByID(id).sendText(msg);
+        if(!onlineFriends.getByID(id).inChat()){ //se há uma janela aberta
+          // onlineFriends.getByID(id).automaticStartChat(this);
+           Platform.runLater(new Runnable(){
+               @Override
+               public void run(){
+                   //ListaAmigos.this.iniciaConversa(ListaAmigos.this.onlineFriends.getByID(id));
+                   onlineFriends.getByID(id).automaticStartChat(new Stage(), ListaAmigos.this);
+                   onlineFriends.getByID(id).sendText(msg);
+                   System.out.println("obaa ");
+               }
+           });
+            
         }
-        else{ //cria uma janela e inicia a conversa
-            onlineFriends.getByID(id).startChat(new Stage(), this);
+        else
             onlineFriends.getByID(id).sendText(msg);
-        }
     }
     
     public void reload(String peer[]){

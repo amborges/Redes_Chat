@@ -34,6 +34,16 @@ public class PeerData {
         public void startChat(Stage stage, ListaAmigos setParent){
             try{
                 inChat = true;
+                //chat = new JanelaChat(setParent, this);
+                //chat.start(stage);
+            } catch (Exception e){
+                System.out.println("Falha ao abrir chat com " + name + " : " + e);
+            }
+        }
+        public void automaticStartChat(Stage stage, ListaAmigos setParent){
+            System.out.println("entrei em automaticStartChat ");
+            try{
+                inChat = true;
                 chat = new JanelaChat(setParent, this);
                 chat.start(stage);
             } catch (Exception e){
