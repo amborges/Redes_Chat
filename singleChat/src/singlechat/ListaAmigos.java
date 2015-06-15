@@ -175,6 +175,18 @@ public class ListaAmigos extends Application{
         }
     }
     
+    public void confirmOnline(String peer[]){
+        for(String p : peer){
+            String a[] = p.split(",");
+            if(a.length > 2){
+                if(USERID == Integer.parseInt(a[0])){
+                    Servidor.returnToClient(SingleChat.IPSERVIDOR, "RECV_MSG " + USERID + "\n\n");
+                    break;
+                }
+            }
+        }
+    }
+    
     public void openChat(String id){
         System.out.println("entrou em openchat");
         int theFriendID = Integer.parseInt(id);

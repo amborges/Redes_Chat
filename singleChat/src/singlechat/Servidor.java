@@ -102,6 +102,10 @@ public class Servidor extends Thread{
             String peer[] = m[1].split("\n");
             program.reload(peer);
         }
+        else if(m[0].equals("MASTER_PEER")){
+            String peer[] = m[1].split("\n");
+            program.confirmOnline(peer);
+        }
         else{
             System.out.println("MENSAGEM NAO RECONHECIDA");
         }       

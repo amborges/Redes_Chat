@@ -4,6 +4,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import singlechat.PeerData;
 
 
 
@@ -36,9 +38,9 @@ public class PeerMaster{
                     System.out.println("CONECTANDO NOVO CLIENTE!");
                     String dataPeer = msgSplit[2].hashCode() + "," + 
                         msgSplit[2].replaceAll("\n","") + "," + clientIP + 
-                        ",true," + msgSplit[3].replaceAll("\n", "");
+                        ",ONLINE," + msgSplit[3].replaceAll("\n", "");
                     listOfPeers.add(dataPeer);
-					//listOfPeers.printAllPeers();
+                    //listOfPeers.printAllPeers();
                     returnPeers(); //manda pra todo mundo
                 }
                 else if(msgSplit[0].equals("MASTER_PEER") && msgSplit[1].equals("DISCONNECT")){
@@ -52,8 +54,12 @@ public class PeerMaster{
                     System.out.println("RESPONDENDO OS PEERS ONLINE");
                     returnPeers(client.getInetAddress().toString().replaceAll("/",""));
                 }
+                else if(msgSplit[0].equals("RECV_MSG")){
+                    listOfPeers.getByID(Integer.parseInt(msgSplit[1])).status = "ONLINE";
+                }
 
                 client.close();
+                onlinePeersGarantee();
                 System.out.println("Fim da conexao!");
             }	
         }catch(Exception e){
@@ -108,6 +114,45 @@ public class PeerMaster{
             saida.close();
         }catch(Exception e){
             System.out.println("Falha em responder ao aplicativo cliente: " + e);
+        }
+    }
+    
+    private static void onlinePeersGarantee(){
+        try{
+            String msg = "MASTER_PEER UPDATE ";
+            String listip[] = new String[listOfPeers.size()];
+            ArrayList<String> toRemove = new ArrayList<>();
+            
+            for(int i = 0; i < listOfPeers.size(); i++){
+                if(listOfPeers.get(i).status.equals("OFFLINE")){
+                    //se já foi enviado uma msg e não retornou, remove da lista
+                    toRemove.add(listOfPeers.get(i).name);
+                }
+                else{
+                    listip[i] = listOfPeers.get(i).ip;
+                    msg += "(" + listOfPeers.get(i).id + ","
+                            + listOfPeers.get(i).name + ","
+                            + listOfPeers.get(i).ip + ","
+                            + listOfPeers.get(i).status + ","
+                            + listOfPeers.get(i).key + ")\n";
+                    listOfPeers.get(i).status = "OFFLINE"; //envia uma vez, offline, uma segunda remove
+                }
+            }
+            msg += "\n\n";
+            
+            for(String rem : toRemove){
+                listOfPeers.remove(rem);
+            }
+            
+            for(String ip : listip){
+                Socket client = new Socket(ip, 6991);
+                ObjectOutputStream saida = new ObjectOutputStream(client.getOutputStream());
+                saida.flush();
+                saida.writeUTF(msg);
+                saida.close();
+            }
+        }catch(Exception e){
+            System.out.println("Falha em verificar consistencia de cliente conectado: " + e);
         }
     }
 }
