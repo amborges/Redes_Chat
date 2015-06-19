@@ -40,6 +40,9 @@ public class ExibeAmigos extends Application{
         int j = 0;
         int k = -1;
         for(int i = 0; i < friends.size(); i++){
+            if(friends.get(i).id == ListaAmigos.USERID){
+                continue;
+            }
             b[i] = new Button();
             b[i].setText(friends.get(i).name);
             PeerData.Peer auxPeers = friends.get(i);
