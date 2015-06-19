@@ -89,6 +89,15 @@ public class PeerData {
 	public int size(){
 		return peer.size();
 	}
+	
+	public Peer getByID(int id){
+    for(Peer peer1 : peer){
+        if(peer1.id == id)
+            return peer1;
+    }
+  	return null;
+  }
+	
 	public void printAllPeers(){
             System.out.println("LISTA DOS CONECTADOS");
             for (Peer peer1 : peer) {

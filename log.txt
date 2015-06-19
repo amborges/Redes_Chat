@@ -1,3 +1,57 @@
+commit 57a89612dd75255fdc1a1156626ef280e1d78084
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Mon Jun 15 10:17:44 2015 -0300
+
+    Inclui um sistema extra de garantia de peers online, falta testar
+
+commit 51ae18ccfd9ff642d9b489fe0f93d0f6f86ff11a
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Fri Jun 12 16:23:18 2015 -0300
+
+    t1 funcional! Abre janela automática do chat :)
+
+commit 3da9b6b20f1b5623fbfc11032bb7978c7b4d3089
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Fri Jun 12 16:02:47 2015 -0300
+
+    t1 pronto!!!! Abre janela do contato quando enviado a mensagem!!!!!!!!!!
+
+commit a4224b3e60b4e59f496ebdde51b0f6486987b3ae
+Author: Lucas <Lucas@Lenovo>
+Date:   Fri Jun 12 13:49:19 2015 -0300
+
+    mensagem com espaços agora
+
+commit 98c07b7bb525dfceae4a97b720cc51e2604023be
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Fri Jun 12 13:23:34 2015 -0300
+
+    AGORA TA FUNCIONANDO
+
+commit 1dedfee32dd17b3b61aab5facc360b5bfd17b0c0
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Tue Jun 9 16:21:48 2015 -0300
+
+    Algumas modificacoes no peerdata do aplicativo. Problema em abrir janela automaticamente ainda permanece
+
+commit a5f4c744ac59793ab93074fb003783dc29c9b544
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Tue Jun 9 11:47:32 2015 -0300
+
+    problemas ao abrir janela de chat
+
+commit 6dfabab29389a53761979c6cd4a279ed3b48592b
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Tue Jun 9 11:20:12 2015 -0300
+
+    problema do ultimo conectado resolvido
+
+commit adaa6009c5a8cef9462f1813bf465cc1aac0d3bd
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Tue Jun 9 10:45:08 2015 -0300
+
+    peerdata do server esta imprimindo msg
+
 commit e427e868261a0c62ad39ebe6a59cd066d2c971e4
 Author: Alex Borges <amborges@inf.ufpel.edu.br>
 Date:   Mon Jun 1 15:28:35 2015 -0300
