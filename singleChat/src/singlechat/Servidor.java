@@ -37,6 +37,9 @@ public class Servidor extends Thread{
     
     Servidor(String setName, String setKey, ListaAmigos setProgram){
         //System.out.println("SERVIDOR ATIVADO");
+        
+        //createCertificate(setName, setKey);
+        
         try{
             //server = new ServerSocket(SingleChat.DOORSERVIDOR); //porta definida no protocolo
             SSLServerSocketFactory factory=(SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
@@ -132,8 +135,6 @@ public class Servidor extends Thread{
         try{
             //InetAddress friend = InetAddress.getByName(friendIP);
             //System.out.println(friendIP);
-            
-                
             SSLSocketFactory factory=(SSLSocketFactory) SSLSocketFactory.getDefault();
             SSLSocket retToClient=(SSLSocket) factory.createSocket(friendIP, SingleChat.DOORSERVIDOR);
             
@@ -142,11 +143,6 @@ public class Servidor extends Thread{
                 sender.writeUTF(msg);
                 sender.close();
                 retToClient.close();
-            
-                
-            
-            
-                   
             //Socket retToClient = new Socket(friendIP, SingleChat.DOORSERVIDOR);
             //Socket retToClient = new Socket("192.168.161.248", 6991);
             
@@ -187,5 +183,22 @@ public class Servidor extends Thread{
             System.out.println("Falha ao criptografar a senha : " + e);
         }
         return senhaCriptografada;
+    }
+    
+    private void createCertificate(String name, String key){
+        try{ //CN=alex, OU=ufpel, O=ufpel, L=pelotas, ST=rs, C=br
+            String toExec = "keytool -genkey -noprompt " +
+                        " -alias " + name + " " +
+                        " -dname \"CN="+ name +", OU=ufpel, O=ufpel, L=Pelotas, S=rs, C=br\" " +
+                        " -keystore "+ key +" " +
+                        " -storepass "+ key +" " +
+                        " -keypass "+ key ;
+            
+            Runtime rt = Runtime.getRuntime();
+            Process pr = rt.exec(toExec);
+            System.out.println(toExec);
+        }catch(Exception e){
+            System.out.println("Falha ao criar o certificado: " + e);
+        }
     }
 }
