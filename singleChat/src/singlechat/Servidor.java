@@ -152,7 +152,8 @@ public class Servidor extends Thread{
         Realiza o retorno de uma mensagem ao cliente
         */
         try{
-            Socket retToClient = new Socket(SingleChat.IPSERVIDOR, SingleChat.DOORSERVIDOR);
+            SSLSocketFactory factory=(SSLSocketFactory) SSLSocketFactory.getDefault();
+            SSLSocket retToClient=(SSLSocket) factory.createSocket(SingleChat.IPSERVIDOR, SingleChat.DOORSERVIDOR);
             ObjectOutputStream sender = new ObjectOutputStream(retToClient.getOutputStream());
             sender.flush();
             sender.writeUTF("MASTER_PEER CONNECT " + name + " " + key + "\n\n");
