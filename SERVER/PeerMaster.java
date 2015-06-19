@@ -58,7 +58,7 @@ public class PeerMaster{
                 }
 
                 client.close();
-                onlinePeersGarantee();
+                //onlinePeersGarantee();
                 System.out.println("Fim da conexao!");
             }	
         }catch(Exception e){
