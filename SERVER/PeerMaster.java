@@ -1,5 +1,6 @@
 package SERVER;
 
+import java.io.File;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -19,19 +20,23 @@ public class PeerMaster{
 
     public static void main(String[] args) {
     		SSLServerSocketFactory factory;
-        SSLServerSocket server;
+        ServerSocket server;
         SSLSocket client;
 
         try{
-        		factory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-	      		server = (SSLServerSocket) factory.createServerSocket(6991);
-		      	
-		      	String s[] = factory.getSupportedCipherSuites();
-            
-            SSLParameters param = new SSLParameters();
-            param.setCipherSuites(s);
-            
-            server.setSSLParameters(param);
+        		//Setando passwords SSL
+        		//File f = new File("server.truststore");
+        		//if(f.exists() && !f.isDirectory())
+				    	System.setProperty("javax.net.ssl.keyStore","server.truststore");
+				    //else
+				    //	System.out.println("FILE DOESNT EXT!");
+				    System.setProperty("javax.net.ssl.KeyStorePassword","changeit");
+        		
+        		SSLServerSocketFactory ssf = (SSLServerSocketFactory) 				   SSLServerSocketFactory.getDefault();
+server = ssf.createServerSocket(6991);
+
+        		//factory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+	      		//server = (SSLServerSocket) factory.createServerSocket(6991);
 		      	
 						//server = new ServerSocket(6991);
             listOfPeers = new PeerData();
@@ -123,7 +128,7 @@ public class PeerMaster{
     private static void answer(String ip, String msg){
         try{
 						SSLSocketFactory factory=(SSLSocketFactory) SSLSocketFactory.getDefault();
-            SSLSocket client=(SSLSocket) factory.createSocket(ip, 6991);
+            Socket client=factory.createSocket(ip, 6991);
 			
 						//Socket client = new Socket(ip, 6991);
             ObjectOutputStream saida = new ObjectOutputStream(client.getOutputStream());
