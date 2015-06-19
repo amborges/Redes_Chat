@@ -38,6 +38,10 @@ public class Servidor extends Thread{
     Servidor(String setName, String setKey, ListaAmigos setProgram){
         //System.out.println("SERVIDOR ATIVADO");
         
+        //Setando passwords SSL
+        System.setProperty("javax.net.ssl.trustStore","C:/Users/Lucas/.keystore");
+        System.setProperty("javax.net.ssl.trustStorePassword","123456");
+        
         //createCertificate(setName, setKey);
         
         try{
