@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.MessageDigest;
+import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
@@ -40,6 +41,13 @@ public class Servidor extends Thread{
             //server = new ServerSocket(SingleChat.DOORSERVIDOR); //porta definida no protocolo
             SSLServerSocketFactory factory=(SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
             SSLServerSocket server =(SSLServerSocket) factory.createServerSocket(SingleChat.DOORSERVIDOR);
+            
+            String s[] = {"foo", "bar"};
+            
+            SSLParameters param = new SSLParameters();
+            param.setCipherSuites(s);
+            
+            server.setSSLParameters(param);
             
             name = setName;
             id = name.hashCode();

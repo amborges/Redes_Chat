@@ -17,19 +17,26 @@ public class PeerMaster{
     static private PeerData listOfPeers;
 
     public static void main(String[] args) {
+    		SSLServerSocketFactory factory;
         SSLServerSocket server;
         SSLSocket client;
 
         try{
-            SSLServerSocketFactory factory=(SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-            server =(SSLServerSocket) factory.createServerSocket(6991);
-			
-			
-			//server = new ServerSocket(6991);
+        		factory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+	      		server = (SSLServerSocket) factory.createServerSocket(6991);
+		      	
+		      	String s[] = {"foo", "bar"};
+            
+            SSLParameters param = new SSLParameters();
+            param.setCipherSuites(s);
+            
+            server.setSSLParameters(param);
+		      	
+						//server = new ServerSocket(6991);
             listOfPeers = new PeerData();
             while(true){
                 System.out.println("Antes da conexao!");
-                client = (SSLSocket)server.accept();
+                client = (SSLSocket) server.accept();
                 System.out.println("Conexao aceita!");
                 ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
                 String msg = entrada.readUTF();
@@ -114,11 +121,10 @@ public class PeerMaster{
     
     private static void answer(String ip, String msg){
         try{
-            
-			SSLSocketFactory factory=(SSLSocketFactory) SSLSocketFactory.getDefault();
+						SSLSocketFactory factory=(SSLSocketFactory) SSLSocketFactory.getDefault();
             SSLSocket client=(SSLSocket) factory.createSocket(ip, 6991);
 			
-			//Socket client = new Socket(ip, 6991);
+						//Socket client = new Socket(ip, 6991);
             ObjectOutputStream saida = new ObjectOutputStream(client.getOutputStream());
             saida.flush();
             saida.writeUTF(msg);
