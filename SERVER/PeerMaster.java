@@ -3,6 +3,10 @@ package SERVER;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -13,11 +17,15 @@ public class PeerMaster{
     static private PeerData listOfPeers;
 
     public static void main(String[] args) {
-        ServerSocket server;
-        Socket client;
+        SSLServerSocket server;
+        SSLSocket client;
 
         try{
-            server = new ServerSocket(6991);
+            SSLServerSocketFactory factory=(SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+            SSLServerSocket server =(SSLServerSocket) factory.createServerSocket(SingleChat.DOORSERVIDOR);
+			
+			
+			//server = new ServerSocket(6991);
             listOfPeers = new PeerData();
             while(true){
                 System.out.println("Antes da conexao!");
@@ -106,7 +114,11 @@ public class PeerMaster{
     
     private static void answer(String ip, String msg){
         try{
-            Socket client = new Socket(ip, 6991);
+            
+			SSLSocketFactory factory=(SSLSocketFactory) SSLSocketFactory.getDefault();
+            SSLSocket client=(SSLSocket) factory.createSocket(ip, 6991);
+			
+			//Socket client = new Socket(ip, 6991);
             ObjectOutputStream saida = new ObjectOutputStream(client.getOutputStream());
             saida.flush();
             saida.writeUTF(msg);
