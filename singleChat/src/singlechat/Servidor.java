@@ -124,17 +124,19 @@ public class Servidor extends Thread{
         try{
             //InetAddress friend = InetAddress.getByName(friendIP);
             //System.out.println(friendIP);
-            if(friendIP.equals(SingleChat.IPSERVIDOR)){
-                Socket retToClient = new Socket(SingleChat.IPSERVIDOR, SingleChat.DOORSERVIDOR);
+            
+                
+            SSLSocketFactory factory=(SSLSocketFactory) SSLSocketFactory.getDefault();
+            SSLSocket retToClient=(SSLSocket) factory.createSocket(friendIP, SingleChat.DOORSERVIDOR);
+            
                 ObjectOutputStream sender = new ObjectOutputStream(retToClient.getOutputStream());
                 sender.flush();
                 sender.writeUTF(msg);
                 sender.close();
                 retToClient.close();
-            }else{
-                SSLSocketFactory factory=(SSLSocketFactory) SSLSocketFactory.getDefault();
-                SSLSocket retToClient=(SSLSocket) factory.createSocket(friendIP, SingleChat.DOORSERVIDOR);
-            }
+            
+                
+            
             
                    
             //Socket retToClient = new Socket(friendIP, SingleChat.DOORSERVIDOR);
