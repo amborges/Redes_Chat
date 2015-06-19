@@ -5,12 +5,20 @@
  */
 package singlechat;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
@@ -21,8 +29,10 @@ import javax.net.ssl.SSLSocketFactory;
  *
  * @author alex
  */
+
 public class Servidor extends Thread{
     
+
     //propriedades
     SSLServerSocket server; //atributo ouvidor do servidor
     SSLSocket client; //atributo para responder as mensagens
@@ -36,32 +46,46 @@ public class Servidor extends Thread{
     String key; //senha do usuário do chat
     
     Servidor(String setName, String setKey, ListaAmigos setProgram){
-        //System.out.println("SERVIDOR ATIVADO");
+        
+
+        //tentando ler um arquivo
+        try {
+            //System.out.println("SERVIDOR ATIVADO");
+            
+            //tentando ler um arquivo
+            BufferedReader reader = new BufferedReader(new FileReader("cacerts.jks"));
+        } catch (FileNotFoundException ex) {
+            System.out.println("Arquivo nao encontrado");
+        }
         
         //Setando passwords SSL
-        System.setProperty("javax.net.ssl.trustStore","C:/Users/Lucas/.keystore");
-        System.setProperty("javax.net.ssl.trustStorePassword","123456");
+        //System.setProperty("javax.net.ssl.trustStrore", "C:\\Program Files\\Java\\jre1.8.0_45\\lib\\security\\cacerts");
+        //System.setProperty("javax.net.ssl.trustStore","cacerts.jks");
+        //System.setProperty("javax.net.ssl.KeyPassword","changeit");
         
         //createCertificate(setName, setKey);
         
         try{
             //server = new ServerSocket(SingleChat.DOORSERVIDOR); //porta definida no protocolo
-            SSLServerSocketFactory factory=(SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-            SSLServerSocket server =(SSLServerSocket) factory.createServerSocket(SingleChat.DOORSERVIDOR);
+            //SSLServerSocketFactory factory=(SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+            //SSLServerSocket server =(SSLServerSocket) factory.createServerSocket(SingleChat.DOORSERVIDOR);
             
-            String s[] = factory.getSupportedCipherSuites();
-            
-            SSLParameters param = new SSLParameters();
-            param.setCipherSuites(s);
-            
-            server.setSSLParameters(param);
+            System.setProperty("javax.net.ssl.trustStore", "server.truststore");
+
+    SSLSocketFactory ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();
+    Socket server = ssf.createSocket("192.168.0.13", 6991);
+//            String s[] = factory.getSupportedCipherSuites();
+//            
+//            SSLParameters param = new SSLParameters();
+//            param.setCipherSuites(s);
+//            
+//            server.setSSLParameters(param);
             
             name = setName;
             id = name.hashCode();
             ip = InetAddress.getLocalHost();//server.getInetAddress();
             key = sha1(setKey);
             program = setProgram;
-            
             
             connectToServer();
             
@@ -140,7 +164,7 @@ public class Servidor extends Thread{
             //InetAddress friend = InetAddress.getByName(friendIP);
             //System.out.println(friendIP);
             SSLSocketFactory factory=(SSLSocketFactory) SSLSocketFactory.getDefault();
-            SSLSocket retToClient=(SSLSocket) factory.createSocket(friendIP, SingleChat.DOORSERVIDOR);
+            Socket retToClient=(SSLSocket) factory.createSocket(friendIP, SingleChat.DOORSERVIDOR);
             
                 ObjectOutputStream sender = new ObjectOutputStream(retToClient.getOutputStream());
                 sender.flush();
