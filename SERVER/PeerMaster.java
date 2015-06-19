@@ -5,6 +5,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import java.net.Socket;
@@ -25,7 +26,7 @@ public class PeerMaster{
         		factory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 	      		server = (SSLServerSocket) factory.createServerSocket(6991);
 		      	
-		      	String s[] = {"foo", "bar"};
+		      	String s[] = factory.getSupportedCipherSuites();
             
             SSLParameters param = new SSLParameters();
             param.setCipherSuites(s);

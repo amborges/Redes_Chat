@@ -42,7 +42,7 @@ public class Servidor extends Thread{
             SSLServerSocketFactory factory=(SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
             SSLServerSocket server =(SSLServerSocket) factory.createServerSocket(SingleChat.DOORSERVIDOR);
             
-            String s[] = {"foo", "bar"};
+            String s[] = factory.getSupportedCipherSuites();
             
             SSLParameters param = new SSLParameters();
             param.setCipherSuites(s);
