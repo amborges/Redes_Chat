@@ -10,7 +10,7 @@ import singlechat.PeerData;
 
 
 public class PeerMaster{
-	
+	//modificado por lucas
     static private PeerData listOfPeers;
 
     public static void main(String[] args) {
