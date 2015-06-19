@@ -11,6 +11,10 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.MessageDigest;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  *
@@ -19,8 +23,8 @@ import java.security.MessageDigest;
 public class Servidor extends Thread{
     
     //propriedades
-    ServerSocket server; //atributo ouvidor do servidor
-    Socket client; //atributo para responder as mensagens
+    SSLServerSocket server; //atributo ouvidor do servidor
+    SSLSocket client; //atributo para responder as mensagens
     
     ListaAmigos program; //aplicativo GUI principal
     
@@ -34,7 +38,8 @@ public class Servidor extends Thread{
         //System.out.println("SERVIDOR ATIVADO");
         try{
             //server = new ServerSocket(SingleChat.DOORSERVIDOR); //porta definida no protocolo
-            server = new ServerSocket(SingleChat.DOORSERVIDOR); //TESTE
+            SSLServerSocketFactory factory=(SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+            SSLServerSocket server =(SSLServerSocket) factory.createServerSocket(SingleChat.DOORSERVIDOR);
             
             name = setName;
             id = name.hashCode();
@@ -64,7 +69,8 @@ public class Servidor extends Thread{
     public void run(){
         while(true){
             try{
-                client = server.accept();
+                //client = server.accept();
+                client = (SSLSocket)server.accept();
                 //System.out.println("CHAT ESTA OUVINDO");
                 ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
                 String msg = entrada.readUTF();
@@ -118,13 +124,22 @@ public class Servidor extends Thread{
         try{
             //InetAddress friend = InetAddress.getByName(friendIP);
             //System.out.println(friendIP);
-            Socket retToClient = new Socket(friendIP, SingleChat.DOORSERVIDOR);
+            if(friendIP.equals(SingleChat.IPSERVIDOR)){
+                Socket retToClient = new Socket(SingleChat.IPSERVIDOR, SingleChat.DOORSERVIDOR);
+                ObjectOutputStream sender = new ObjectOutputStream(retToClient.getOutputStream());
+                sender.flush();
+                sender.writeUTF(msg);
+                sender.close();
+                retToClient.close();
+            }else{
+                SSLSocketFactory factory=(SSLSocketFactory) SSLSocketFactory.getDefault();
+                SSLSocket retToClient=(SSLSocket) factory.createSocket(friendIP, SingleChat.DOORSERVIDOR);
+            }
+            
+                   
+            //Socket retToClient = new Socket(friendIP, SingleChat.DOORSERVIDOR);
             //Socket retToClient = new Socket("192.168.161.248", 6991);
-            ObjectOutputStream sender = new ObjectOutputStream(retToClient.getOutputStream());
-            sender.flush();
-            sender.writeUTF(msg);
-            sender.close();
-            retToClient.close();
+            
         }catch(Exception e){
             System.out.println("Erro ao retornar msg ao amigo : " + e);
         }
