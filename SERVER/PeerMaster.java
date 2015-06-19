@@ -22,14 +22,14 @@ public class PeerMaster{
 
         try{
             SSLServerSocketFactory factory=(SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-            SSLServerSocket server =(SSLServerSocket) factory.createServerSocket(SingleChat.DOORSERVIDOR);
+            server =(SSLServerSocket) factory.createServerSocket(6991);
 			
 			
 			//server = new ServerSocket(6991);
             listOfPeers = new PeerData();
             while(true){
                 System.out.println("Antes da conexao!");
-                client = server.accept();
+                client = (SSLSocket)server.accept();
                 System.out.println("Conexao aceita!");
                 ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
                 String msg = entrada.readUTF();
