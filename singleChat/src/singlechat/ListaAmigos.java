@@ -13,7 +13,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -33,8 +32,7 @@ public class ListaAmigos extends Application{
     private Servidor theMatrix; //Servidor que tudo ouve
     static public String USERNAME; //meu nome
     static public int USERID; //meu ID
-    PeerData onlineFriends; //lista de amigos online
-    ComboBox cbList; //combobox dos amigos onlines
+    static public PeerData onlineFriends; //lista de amigos online
     
     
     //esse método é para iniciar conversa com alguém, na verdade

@@ -5,25 +5,21 @@
  */
 package singlechat;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.security.KeyStore;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.net.ServerSocketFactory;
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocket;
-import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 
 /**
  *
@@ -43,54 +39,47 @@ public class Servidor extends Thread{
     int id; //identificador unico de rede, parte do protocolo
     InetAddress ip; //endereço IP do cliente
     String name; //nome do usuário que tá no chat
-    String key; //senha do usuário do chat
+    char key[]; //senha do usuário do chat
+    String certificate; //o endereço do meu certificado
+    
+        //Conjunto de codificações para descriptografar mensagens recebidas
+    private final String[] codificacao = {"SSL_RSA_WITH_RC4_128_MD5"};
     
     Servidor(String setName, String setKey, ListaAmigos setProgram){
         
-
-        //tentando ler um arquivo
-        try {
-            //System.out.println("SERVIDOR ATIVADO");
-            
-            //tentando ler um arquivo
-            BufferedReader reader = new BufferedReader(new FileReader("cacerts.jks"));
-        } catch (FileNotFoundException ex) {
-            System.out.println("Arquivo nao encontrado");
-        }
-        
-        //Setando passwords SSL
-        //System.setProperty("javax.net.ssl.trustStrore", "C:\\Program Files\\Java\\jre1.8.0_45\\lib\\security\\cacerts");
-        //System.setProperty("javax.net.ssl.trustStore","cacerts.jks");
-        //System.setProperty("javax.net.ssl.KeyPassword","changeit");
-        
-        //createCertificate(setName, setKey);
+        KeyStore ks;
+        KeyManagerFactory kmf;
+        SSLContext contextoSSL;
+        ServerSocketFactory ssf;
         
         try{
-            //server = new ServerSocket(SingleChat.DOORSERVIDOR); //porta definida no protocolo
-            //SSLServerSocketFactory factory=(SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-            //SSLServerSocket server =(SSLServerSocket) factory.createServerSocket(SingleChat.DOORSERVIDOR);
-            
-            System.setProperty("javax.net.ssl.trustStore", "server.truststore");
-
-    SSLSocketFactory ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();
-    Socket server = ssf.createSocket("192.168.0.13", 6991);
-//            String s[] = factory.getSupportedCipherSuites();
-//            
-//            SSLParameters param = new SSLParameters();
-//            param.setCipherSuites(s);
-//            
-//            server.setSSLParameters(param);
-            
             name = setName;
             id = name.hashCode();
             ip = InetAddress.getLocalHost();//server.getInetAddress();
-            key = sha1(setKey);
+            key = sha1(setKey).toCharArray();
             program = setProgram;
+            certificate = createCertificate(name, key);
             
-            connectToServer();
+            System.exit(0);
             
-            //returnToClient(SingleChat.IPSERVIDOR, );
-            //System.out.println("meu ip eh " + ip.toString() + " senha = " + key);
+            ks = KeyStore.getInstance("JKS");
+            ks.load(new FileInputStream(name), key);
+            
+                //cria um caminho de certificação baseado em X509
+            kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf.init(ks, key);
+            
+                //cria um SSLContext segundo o protocolo informado
+            contextoSSL = SSLContext.getInstance("SSLv3");
+            contextoSSL.init(kmf.getKeyManagers(), null, null);
+            
+                //Iniciando o servidor...
+            ssf = contextoSSL.getServerSocketFactory();
+            server = (SSLServerSocket) ssf.createServerSocket(SingleChat.DOORSERVIDOR);
+            
+            //connectToServer();
+            returnToClient(SingleChat.IPSERVIDOR, 
+                    "MASTER_PEER CONNECT " + name + " " + key + "\n\n");
         }catch(Exception e){
             System.out.println("FALHA ALOCAR NO SERVIDOR PRINCIPAL: " + e);
         }
@@ -106,14 +95,20 @@ public class Servidor extends Thread{
     
     @Override
     public void run(){
+        ObjectInputStream ouvido;
+        
         while(true){
             try{
                 //client = server.accept();
                 client = (SSLSocket)server.accept();
-                //System.out.println("CHAT ESTA OUVINDO");
-                ObjectInputStream entrada = new ObjectInputStream(client.getInputStream());
-                String msg = entrada.readUTF();
-                entrada.close();
+                client.setEnabledCipherSuites(codificacao);
+                
+                    //ouve a mensagem e passa adiante
+                ouvido = new ObjectInputStream(client.getInputStream());
+                String msg = ouvido.readUTF();//readObject().toString();
+                ouvido.close();
+                client.close();
+                
                 trataMsg(msg);
             }catch(Exception e){
                 System.out.println("Falha ao ouvir : " + e);
@@ -133,7 +128,7 @@ public class Servidor extends Thread{
             msg = msg.replace("\n", "");
             program.talkto(m[2], msg);
             //responde RECV_MSG <MY_PEER_ID>\n\n
-            String recmsg = "RECV_MSG " + ip.toString() + "\n\n";
+            String recmsg = "RECV_MSG " + id + "\n\n";
             returnToClient(m[2], recmsg);
         }
         //TALK_TO <PEER_ID>\n\n
@@ -156,23 +151,57 @@ public class Servidor extends Thread{
         }       
     }
     
-    public static void returnToClient(String friendIP, String msg){
+    public static void returnToClient(String friendID, String msg){
         /*
         Realiza o retorno de uma mensagem ao cliente
         */
+                
+        PeerData.Peer p = null;
+        
+        if(friendID.equals(SingleChat.IPSERVIDOR)){
+            p.certificate = SingleChat.CERTIFICADOSERVIDOR;
+            p.friendIP = SingleChat.IPSERVIDOR;
+            p.key = SingleChat.PASSWORDSERVIDOR;
+        }
+        else
+            p = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID));
+        
         try{
-            //InetAddress friend = InetAddress.getByName(friendIP);
-            //System.out.println(friendIP);
-            SSLSocketFactory factory=(SSLSocketFactory) SSLSocketFactory.getDefault();
-            Socket retToClient=(SSLSocket) factory.createSocket(friendIP, SingleChat.DOORSERVIDOR);
+            KeyStore ks = KeyStore.getInstance("JKS");
+            ks.load(new FileInputStream(p.name), p.key);
             
-                ObjectOutputStream sender = new ObjectOutputStream(retToClient.getOutputStream());
-                sender.flush();
-                sender.writeUTF(msg);
-                sender.close();
-                retToClient.close();
-            //Socket retToClient = new Socket(friendIP, SingleChat.DOORSERVIDOR);
-            //Socket retToClient = new Socket("192.168.161.248", 6991);
+                //cria um caminho de certificação baseado em X509
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf.init(ks, p.key);
+            
+                //cria um SSLContext segundo o protocolo informado
+            SSLContext contextoSSL = SSLContext.getInstance("SSLv3");
+            contextoSSL.init(kmf.getKeyManagers(), null, null);
+            
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(
+                    TrustManagerFactory.getDefaultAlgorithm());
+                        
+            tmf.init(ks);
+            TrustManager tms[] = tmf.getTrustManagers();
+            
+            KeyManagerFactory keymf = KeyManagerFactory.getInstance(
+                KeyManagerFactory.getDefaultAlgorithm());
+            
+            keymf.init(ks, p.key);
+            KeyManager kms[] = keymf.getKeyManagers();
+            
+            contextoSSL = SSLContext.getInstance("SSL");
+            contextoSSL.init(kms, tms, null);
+            
+            SSLSocketFactory ssf = contextoSSL.getSocketFactory();
+            SSLSocket falante = (SSLSocket) ssf.createSocket(p.friendIP, SingleChat.DOORSERVIDOR);
+            
+            ObjectOutputStream sender = new ObjectOutputStream(falante.getOutputStream());
+            sender.flush();
+            sender.writeUTF(msg);
+            sender.close();
+            
+            falante.close();
             
         }catch(Exception e){
             System.out.println("Erro ao retornar msg ao amigo : " + e);
@@ -213,20 +242,27 @@ public class Servidor extends Thread{
         return senhaCriptografada;
     }
     
-    private void createCertificate(String name, String key){
+    private String createCertificate(String name, char key[]){
+        String pass = new String(key);
         try{ //CN=alex, OU=ufpel, O=ufpel, L=pelotas, ST=rs, C=br
             String toExec = "keytool -genkey -noprompt " +
                         " -alias " + name + " " +
-                        " -dname \"CN="+ name +", OU=ufpel, O=ufpel, L=Pelotas, S=rs, C=br\" " +
-                        " -keystore "+ key +" " +
-                        " -storepass "+ key +" " +
-                        " -keypass "+ key ;
-            
-            Runtime rt = Runtime.getRuntime();
-            Process pr = rt.exec(toExec);
+                            //CN=alex, OU=CDTec, O=UFPel, L=Pelotas, ST=RS, C=BR
+                        " -dname \"CN="+ name +", OU=CDTec, O=UFPel, L=Pelotas, S=RS, C=BR\" " +
+                        " -keyalg RSA" +
+                        " -keystore "+ name +".cert " +
+                        " -storepass "+ pass +" " +
+                        " -keypass "+ pass ;
+            //toExec = "gedit";
+            String [] commands = { "bash", "-c", toExec };
+            Runtime.getRuntime().exec(commands);
+            //Runtime rt = Runtime.getRuntime();
+            //Process pr = rt.exec(toExec);
             System.out.println(toExec);
         }catch(Exception e){
             System.out.println("Falha ao criar o certificado: " + e);
         }
+        
+        return "";
     }
 }

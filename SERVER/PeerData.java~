@@ -6,6 +6,9 @@
 package SERVER;
 
 import java.util.ArrayList;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 /**
  *
@@ -22,18 +25,47 @@ public class PeerData {
 		public String ip;
 		public String status;
 		public String key;
+		public String certificate;
+		
+		public boolean setCertificate(byte b[]){
+			if(certificate != null){ //vai que esteja vazio...
+				try{
+					FileOutputStream fos = new FileOutputStream("certificates/"+certificate);
+					fos.write(b);
+					fos.close();
+					return true;
+				}catch(Exception e){
+					System.out.println("Falha ao alocar o certificado de " + name);
+					return false;
+				}
+			}
+			return false;
+		}
+		
+		public FileInputStream getCertificate(){
+			if(certificate != null){
+				try{
+					return new FileInputStream("certificates/"+certificate);
+				}catch(Exception e){
+					System.out.println("Falta ao recuperar certificado de " + name);
+					return null;
+				}
+			}
+			return null;
+		}
 	};
 	
 	ArrayList<Peer> peer = new ArrayList<Peer>();
 	
 	public void add(String peerData){
 		String pd[] = peerData.split(",");
-		Peer aux = new Peer();
-		aux.id	  = Integer.parseInt(pd[0]);
-		aux.name	= pd[1];
-		aux.ip	  = pd[2];
-		aux.status  = pd[3];
-		aux.key  = pd[4];
+		Peer aux 				= new Peer();
+		aux.id	  			= Integer.parseInt(pd[0]);
+		aux.name				= pd[1];
+		aux.ip	  			= pd[2];
+		aux.status			= pd[3];
+		aux.key  				= pd[4];
+		aux.certificate	= pd[5];
 		peer.add(aux);
 	}
 	public void remove(String name){
@@ -46,7 +78,11 @@ public class PeerData {
 		}
 		
 		if(pos != -1){
+			File f = new File(peer.get(pos).certificate);
+			if(!f.delete())
+				System.out.println("Falha ao remover certificado do usuário desconectado");
 			peer.remove(pos);
+			
 		}
 	}
 	
@@ -89,10 +125,21 @@ public class PeerData {
 	public int size(){
 		return peer.size();
 	}
+	
+	public Peer getByID(int id){
+    for(Peer peer1 : peer){
+        if(peer1.id == id)
+            return peer1;
+    }
+  	return null;
+  }
+	
 	public void printAllPeers(){
-            System.out.println("LISTA DOS CONECTADOS");
-            for (Peer peer1 : peer) {
-                System.out.println(peer1.name);
-            }
-        }
+      System.out.println("LISTA DOS CONECTADOS");
+      for (Peer peer1 : peer) {
+          System.out.println(peer1.name);
+      }
+  }
+  
+  
 }

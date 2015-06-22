@@ -5,6 +5,7 @@
  */
 package singlechat;
 
+import java.io.FileInputStream;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -33,8 +34,10 @@ public class SingleChat extends Application {
     *   Esta classe é a janela inicial do aplicativo
     *   Ela só abre, pede usuário e senha, e encerra
     */
-    public static final String  IPSERVIDOR      = "192.168.0.13";
-    public static final int     DOORSERVIDOR    = 6991;
+    public static final String  IPSERVIDOR            = "192.168.0.13";
+    public static final int     DOORSERVIDOR          = 6991;
+    public static final char    PASSWORDSERVIDOR[]    = "masterpeerpass".toCharArray();
+    public static final String  CERTIFICADOSERVIDOR   = "server_certificate.cert";
     
     @Override
     public void start(Stage primaryStage) {

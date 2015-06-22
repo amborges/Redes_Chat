@@ -1,5 +1,6 @@
 package SERVER;
 
+import java.io.File;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -16,23 +17,20 @@ import java.util.ArrayList;
 public class PeerMaster{
 	//modificado por lucas
     static private PeerData listOfPeers;
+    static private char 		SERVERPASSWORD[] 	= new String("masterpeerpass").toChar();
+    static private String 	SERVERKEYSTORE 		= "SERVER/server_certificate.cert";
 
     public static void main(String[] args) {
     		SSLServerSocketFactory factory;
-        SSLServerSocket server;
+        ServerSocket server;
         SSLSocket client;
+        SSLServerSocketFactory ssf;
 
         try{
-        		factory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-	      		server = (SSLServerSocket) factory.createServerSocket(6991);
-		      	
-		      	String s[] = {"foo", "bar"};
-            
-            SSLParameters param = new SSLParameters();
-            param.setCipherSuites(s);
-            
-            server.setSSLParameters(param);
-		      	
+        		//Setando passwords SSL
+        		ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+		    		server = ssf.createServerSocket(6991);
+		    		
 						//server = new ServerSocket(6991);
             listOfPeers = new PeerData();
             while(true){
@@ -44,37 +42,36 @@ public class PeerMaster{
                 entrada.close();
 
                 String msgSplit[] = msg.split(" ");
-                System.out.println(msg);
+                //System.out.println(msg);
                 if(msgSplit[0].equals("MASTER_PEER") && msgSplit[1].equals("CONNECT")){
                     //Cliente conectou e requisita a lista de peers
                     String clientIP = client.getInetAddress().toString().replaceAll("/","");
                     msgSplit[2] = msgSplit[2].substring(0, msgSplit[2].length()); //removendo os \n\n
-
                     System.out.println("CONECTANDO NOVO CLIENTE!");
                     String dataPeer = msgSplit[2].hashCode() + "," + 
                         msgSplit[2].replaceAll("\n","") + "," + clientIP + 
                         ",ONLINE," + msgSplit[3].replaceAll("\n", "");
                     listOfPeers.add(dataPeer);
-                    //listOfPeers.printAllPeers();
                     returnPeers(); //manda pra todo mundo
+                    //onlinePeersGarantee();
                 }
                 else if(msgSplit[0].equals("MASTER_PEER") && msgSplit[1].equals("DISCONNECT")){
                     //cliente desconectou
                     System.out.println("CLIENTE DESCONECTANDO");
-
                     listOfPeers.remove(msgSplit[2].substring(0, msgSplit[2].length()-2));
+                    //onlinePeersGarantee();
                 }
                 else if(msgSplit[0].equals("MASTER_PEER") && msgSplit[1].equals("UPDATE\n\n")){
                     //atualizando peers online
                     System.out.println("RESPONDENDO OS PEERS ONLINE");
                     returnPeers(client.getInetAddress().toString().replaceAll("/",""));
+                    //onlinePeersGarantee();
                 }
                 else if(msgSplit[0].equals("RECV_MSG")){
                     listOfPeers.getByID(Integer.parseInt(msgSplit[1])).status = "ONLINE";
                 }
 
                 client.close();
-                //onlinePeersGarantee();
                 System.out.println("Fim da conexao!");
             }	
         }catch(Exception e){
@@ -94,7 +91,7 @@ public class PeerMaster{
             }
             msg += "\n\n";
             
-			System.out.println(msg);
+						//System.out.println(msg);
 			
             for(int i = 0; i < listOfPeers.size(); i++){
                 System.out.println("Sending peers to " + listOfPeers.get(i).name);
@@ -105,7 +102,7 @@ public class PeerMaster{
     
     public static void returnPeers(String ip){
         
-		if(!listOfPeers.isEmpty()){
+				if(!listOfPeers.isEmpty()){
             
             String msg = "PEER_GROUP ";
             for(int i = 0; i < listOfPeers.size(); i++){
@@ -122,9 +119,9 @@ public class PeerMaster{
     
     private static void answer(String ip, String msg){
         try{
-						SSLSocketFactory factory=(SSLSocketFactory) SSLSocketFactory.getDefault();
-            SSLSocket client=(SSLSocket) factory.createSocket(ip, 6991);
-			
+						SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+            Socket client = factory.createSocket(ip, 6991);
+						
 						//Socket client = new Socket(ip, 6991);
             ObjectOutputStream saida = new ObjectOutputStream(client.getOutputStream());
             saida.flush();
@@ -135,7 +132,10 @@ public class PeerMaster{
         }
     }
     
+    private static void 
+    
     private static void onlinePeersGarantee(){
+    	/*
         try{
             String msg = "MASTER_PEER UPDATE ";
             String listip[] = new String[listOfPeers.size()];
@@ -171,6 +171,8 @@ public class PeerMaster{
             }
         }catch(Exception e){
             System.out.println("Falha em verificar consistencia de cliente conectado: " + e);
-        }
+        }*/
     }
+    
+    
 }

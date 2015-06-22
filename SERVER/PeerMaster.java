@@ -1,6 +1,8 @@
 package SERVER;
 
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -10,36 +12,49 @@ import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import java.net.Socket;
+import java.security.KeyStore;
 import java.util.ArrayList;
+import javax.net.ServerSocketFactory;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
 
 
 
 public class PeerMaster{
 	//modificado por lucas
     static private PeerData listOfPeers;
+    static private char     SERVERPASSWORD[]    = new String("masterpeerpass").toCharArray();
+    static private String   SERVERKEYSTORE 	= "SERVER/server_certificate.cert";
+    static private int      DOOR         	= 6991;
 
     public static void main(String[] args) {
-    		SSLServerSocketFactory factory;
-        ServerSocket server;
+    	SSLServerSocket server;
         SSLSocket client;
-
+        KeyStore ks;
+        KeyManagerFactory kmf;
+        SSLContext contextoSSL;
+        ServerSocketFactory ssf;
+        
         try{
-        		//Setando passwords SSL
-        		//File f = new File("server.truststore");
-        		//if(f.exists() && !f.isDirectory())
-				    	System.setProperty("javax.net.ssl.keyStore","server.truststore");
-				    //else
-				    //	System.out.println("FILE DOESNT EXT!");
-				    System.setProperty("javax.net.ssl.KeyStorePassword","changeit");
-        		
-        		SSLServerSocketFactory ssf = (SSLServerSocketFactory) 				   SSLServerSocketFactory.getDefault();
-server = ssf.createServerSocket(6991);
-
-        		//factory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-	      		//server = (SSLServerSocket) factory.createServerSocket(6991);
-		      	
-						//server = new ServerSocket(6991);
+            ks = KeyStore.getInstance("JKS");
+            ks.load(new FileInputStream(SERVERKEYSTORE), SERVERPASSWORD);
+            
+                //cria um caminho de certificação baseado em X509
+            kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf.init(ks, SERVERPASSWORD);
+            
+                //cria um SSLContext segundo o protocolo informado
+            contextoSSL = SSLContext.getInstance("SSLv3");
+            contextoSSL.init(kmf.getKeyManagers(), null, null);
+            
+                //Iniciando o servidor...
+            ssf = contextoSSL.getServerSocketFactory();
+            server = (SSLServerSocket) ssf.createServerSocket(DOOR);
+            
+                //iniciando os peers
             listOfPeers = new PeerData();
+            
+                //Servidor em execução
             while(true){
                 System.out.println("Antes da conexao!");
                 client = (SSLSocket) server.accept();
@@ -49,43 +64,51 @@ server = ssf.createServerSocket(6991);
                 entrada.close();
 
                 String msgSplit[] = msg.split(" ");
-                System.out.println(msg);
+                //System.out.println(msg);
                 if(msgSplit[0].equals("MASTER_PEER") && msgSplit[1].equals("CONNECT")){
                     //Cliente conectou e requisita a lista de peers
                     String clientIP = client.getInetAddress().toString().replaceAll("/","");
+///////////////////////////////////////////
+/////////////////////////////////////////// Trocar para receber cadeia de bytes
+///////////////////////////////////////////
                     msgSplit[2] = msgSplit[2].substring(0, msgSplit[2].length()); //removendo os \n\n
-
+///////////////////////////////////////////
+///////////////////////////////////////////
+///////////////////////////////////////////
                     System.out.println("CONECTANDO NOVO CLIENTE!");
                     String dataPeer = msgSplit[2].hashCode() + "," + 
                         msgSplit[2].replaceAll("\n","") + "," + clientIP + 
                         ",ONLINE," + msgSplit[3].replaceAll("\n", "");
                     listOfPeers.add(dataPeer);
-                    //listOfPeers.printAllPeers();
                     returnPeers(); //manda pra todo mundo
+                    //onlinePeersGarantee();
                 }
                 else if(msgSplit[0].equals("MASTER_PEER") && msgSplit[1].equals("DISCONNECT")){
                     //cliente desconectou
                     System.out.println("CLIENTE DESCONECTANDO");
-
                     listOfPeers.remove(msgSplit[2].substring(0, msgSplit[2].length()-2));
+                    //onlinePeersGarantee();
                 }
                 else if(msgSplit[0].equals("MASTER_PEER") && msgSplit[1].equals("UPDATE\n\n")){
                     //atualizando peers online
                     System.out.println("RESPONDENDO OS PEERS ONLINE");
                     returnPeers(client.getInetAddress().toString().replaceAll("/",""));
+                    //onlinePeersGarantee();
                 }
                 else if(msgSplit[0].equals("RECV_MSG")){
                     listOfPeers.getByID(Integer.parseInt(msgSplit[1])).status = "ONLINE";
                 }
 
                 client.close();
-                //onlinePeersGarantee();
                 System.out.println("Fim da conexao!");
-            }	
+                
+            } //fim do while
+            
         }catch(Exception e){
-                System.out.println("Falha na execução do servidor: " + e);
+            System.out.println("Falha no masterpeer: " + e);
         }
-    }
+        
+    } //FIM SERVIDOR
 
     public static void returnPeers(){
         if(!listOfPeers.isEmpty()){
@@ -99,7 +122,7 @@ server = ssf.createServerSocket(6991);
             }
             msg += "\n\n";
             
-			System.out.println(msg);
+						//System.out.println(msg);
 			
             for(int i = 0; i < listOfPeers.size(); i++){
                 System.out.println("Sending peers to " + listOfPeers.get(i).name);
@@ -110,7 +133,7 @@ server = ssf.createServerSocket(6991);
     
     public static void returnPeers(String ip){
         
-		if(!listOfPeers.isEmpty()){
+				if(!listOfPeers.isEmpty()){
             
             String msg = "PEER_GROUP ";
             for(int i = 0; i < listOfPeers.size(); i++){
@@ -127,9 +150,9 @@ server = ssf.createServerSocket(6991);
     
     private static void answer(String ip, String msg){
         try{
-						SSLSocketFactory factory=(SSLSocketFactory) SSLSocketFactory.getDefault();
-            Socket client=factory.createSocket(ip, 6991);
-			
+						SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+            Socket client = factory.createSocket(ip, 6991);
+						
 						//Socket client = new Socket(ip, 6991);
             ObjectOutputStream saida = new ObjectOutputStream(client.getOutputStream());
             saida.flush();
@@ -140,7 +163,10 @@ server = ssf.createServerSocket(6991);
         }
     }
     
+    
+    
     private static void onlinePeersGarantee(){
+    	/*
         try{
             String msg = "MASTER_PEER UPDATE ";
             String listip[] = new String[listOfPeers.size()];
@@ -176,6 +202,8 @@ server = ssf.createServerSocket(6991);
             }
         }catch(Exception e){
             System.out.println("Falha em verificar consistencia de cliente conectado: " + e);
-        }
+        }*/
     }
+    
+    
 }
