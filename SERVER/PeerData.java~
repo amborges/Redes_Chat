@@ -57,15 +57,16 @@ public class PeerData {
 	
 	ArrayList<Peer> peer = new ArrayList<Peer>();
 	
-	public void add(String peerData){
+	public void add(String peerData, byte certificate[]){
 		String pd[] = peerData.split(",");
 		Peer aux 				= new Peer();
 		aux.id	  			= Integer.parseInt(pd[0]);
 		aux.name				= pd[1];
 		aux.ip	  			= pd[2];
 		aux.status			= pd[3];
-		aux.key  				= pd[4];
-		aux.certificate	= pd[5];
+		//aux.key  				= pd[4];
+		//aux.certificate	= certificate;
+		setCertificate(certificate);
 		peer.add(aux);
 	}
 	public void remove(String name){
@@ -140,6 +141,4 @@ public class PeerData {
           System.out.println(peer1.name);
       }
   }
-  
-  
 }

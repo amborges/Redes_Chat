@@ -66,20 +66,19 @@ public class PeerMaster{
                 String msgSplit[] = msg.split(" ");
                 //System.out.println(msg);
                 if(msgSplit[0].equals("MASTER_PEER") && msgSplit[1].equals("CONNECT")){
+                    //MASTER_PEER CONNECT <CERT_SIZE> \n <PEER_CERT> \n\n
                     //Cliente conectou e requisita a lista de peers
                     String clientIP = client.getInetAddress().toString().replaceAll("/","");
-///////////////////////////////////////////
-/////////////////////////////////////////// Trocar para receber cadeia de bytes
-///////////////////////////////////////////
+
                     msgSplit[2] = msgSplit[2].substring(0, msgSplit[2].length()); //removendo os \n\n
-///////////////////////////////////////////
-///////////////////////////////////////////
-///////////////////////////////////////////
+
                     System.out.println("CONECTANDO NOVO CLIENTE!");
+                    
+                        //<id>,<name>,<ip>,<status>,<certificate>
                     String dataPeer = msgSplit[2].hashCode() + "," + 
                         msgSplit[2].replaceAll("\n","") + "," + clientIP + 
-                        ",ONLINE," + msgSplit[3].replaceAll("\n", "");
-                    listOfPeers.add(dataPeer);
+                        ",ONLINE";// + msgSplit[3].replaceAll("\n", "") + "";
+                    listOfPeers.add(dataPeer, msgSplit[3].getBytes());
                     returnPeers(); //manda pra todo mundo
                     //onlinePeersGarantee();
                 }
