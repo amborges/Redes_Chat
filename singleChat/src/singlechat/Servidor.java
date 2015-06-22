@@ -58,11 +58,11 @@ public class Servidor extends Thread{
             ip = InetAddress.getLocalHost();//server.getInetAddress();
             key = sha1(setKey).toCharArray();
             program = setProgram;
-            certificate = createCertificate(name, key);
+            //certificate = createCertificate(name, key);
             
-            System.exit(0);
+            //System.exit(0);
             
-            ks = KeyStore.getInstance("JKS");
+            /*ks = KeyStore.getInstance("JKS");
             ks.load(new FileInputStream(name), key);
             
                 //cria um caminho de certificação baseado em X509
@@ -75,11 +75,22 @@ public class Servidor extends Thread{
             
                 //Iniciando o servidor...
             ssf = contextoSSL.getServerSocketFactory();
-            server = (SSLServerSocket) ssf.createServerSocket(SingleChat.DOORSERVIDOR);
+            server = (SSLServerSocket) ssf.createServerSocket(SingleChat.DOORSERVIDOR);*/
             
             //connectToServer();
+            FileInputStream fin= new FileInputStream( SingleChat.CERTIFICADOSERVIDOR);
+            //System.out.println(fin.toString());
+           
+            byte a;
+            byte var= new byte[999];
+            int i = 0;
+            while((a = fin, read())!= null){
+                var[i] = a;
+                i++;
+            }
+            
             returnToClient(SingleChat.IPSERVIDOR, 
-                    "MASTER_PEER CONNECT " + name + " " + key + "\n\n");
+                    "MASTER_PEER CONNECT " + certificate.length() + " " + key + "\n\n");
         }catch(Exception e){
             System.out.println("FALHA ALOCAR NO SERVIDOR PRINCIPAL: " + e);
         }
@@ -155,24 +166,37 @@ public class Servidor extends Thread{
         /*
         Realiza o retorno de uma mensagem ao cliente
         */
-                
+        String  auxcertificate;
+        String  auxfriendIP;
+        char  auxkey[];
+        
         PeerData.Peer p = null;
         
         if(friendID.equals(SingleChat.IPSERVIDOR)){
-            p.certificate = SingleChat.CERTIFICADOSERVIDOR;
-            p.friendIP = SingleChat.IPSERVIDOR;
-            p.key = SingleChat.PASSWORDSERVIDOR;
+            
+            auxcertificate = SingleChat.CERTIFICADOSERVIDOR;
+            auxfriendIP = SingleChat.IPSERVIDOR;
+            auxkey = SingleChat.PASSWORDSERVIDOR;
+                       
+
+            //p.certificate = "server_certificate.cert";//SingleChat.CERTIFICADOSERVIDOR;
+            //p.friendIP = SingleChat.IPSERVIDOR;
+            //p.key = SingleChat.PASSWORDSERVIDOR;
         }
-        else
-            p = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID));
-        
+        else{
+            auxcertificate = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID)).certificate;
+            auxfriendIP = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID)).friendIP;
+            auxkey = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID)).key;
+            //p = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID));
+        }
+             
         try{
             KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load(new FileInputStream(p.name), p.key);
+            ks.load(new FileInputStream(auxcertificate), auxkey);
             
                 //cria um caminho de certificação baseado em X509
             KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-            kmf.init(ks, p.key);
+            kmf.init(ks, auxkey);
             
                 //cria um SSLContext segundo o protocolo informado
             SSLContext contextoSSL = SSLContext.getInstance("SSLv3");
@@ -187,14 +211,15 @@ public class Servidor extends Thread{
             KeyManagerFactory keymf = KeyManagerFactory.getInstance(
                 KeyManagerFactory.getDefaultAlgorithm());
             
-            keymf.init(ks, p.key);
+            keymf.init(ks, auxkey);
             KeyManager kms[] = keymf.getKeyManagers();
             
             contextoSSL = SSLContext.getInstance("SSL");
             contextoSSL.init(kms, tms, null);
             
             SSLSocketFactory ssf = contextoSSL.getSocketFactory();
-            SSLSocket falante = (SSLSocket) ssf.createSocket(p.friendIP, SingleChat.DOORSERVIDOR);
+            
+            SSLSocket falante = (SSLSocket) ssf.createSocket(auxfriendIP, SingleChat.DOORSERVIDOR);
             
             ObjectOutputStream sender = new ObjectOutputStream(falante.getOutputStream());
             sender.flush();
