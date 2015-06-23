@@ -24,28 +24,13 @@ public class PeerData {
 		public String name;
 		public String ip;
 		public String status;
-		public String key;
+		public char key[];
 		public String certificate;
-		
-		public boolean setCertificate(byte b[]){
-			if(certificate != null){ //vai que esteja vazio...
-				try{
-					FileOutputStream fos = new FileOutputStream("certificates/"+certificate);
-					fos.write(b);
-					fos.close();
-					return true;
-				}catch(Exception e){
-					System.out.println("Falha ao alocar o certificado de " + name);
-					return false;
-				}
-			}
-			return false;
-		}
 		
 		public FileInputStream getCertificate(){
 			if(certificate != null){
 				try{
-					return new FileInputStream("certificates/"+certificate);
+					return new FileInputStream("certificados/"+id+".cert");
 				}catch(Exception e){
 					System.out.println("Falta ao recuperar certificado de " + name);
 					return null;
@@ -53,20 +38,35 @@ public class PeerData {
 			}
 			return null;
 		}
+                
+                public void certificate_str2file(){
+                    //Dado uma versão do certificado em string, cria e retorna um arquivo localmente
+                    try{
+                        FileOutputStream fos = new FileOutputStream("certificados/" + id + ".cert");
+                        char cc[] = certificate.toCharArray();
+                        for(char aaa : cc){
+                            fos.write((byte)aaa);
+                        }
+                        fos.close();
+                        Thread.sleep(1000); //pra dar tempo do arquivo ser criado localmente
+                    }catch(Exception e){
+                        System.out.println("Falha ao criar certificado: "+e);
+                    }
+                }
 	};
 	
 	ArrayList<Peer> peer = new ArrayList<Peer>();
 	
 	public void add(String peerData, byte certificate[]){
 		String pd[] = peerData.split(",");
-		Peer aux 				= new Peer();
+		Peer aux 			= new Peer();
 		aux.id	  			= Integer.parseInt(pd[0]);
-		aux.name				= pd[1];
+		aux.name			= pd[1];
 		aux.ip	  			= pd[2];
 		aux.status			= pd[3];
-		//aux.key  				= pd[4];
-		//aux.certificate	= certificate;
-		aux.setCertificate(certificate);
+		aux.key                         = pd[4].toCharArray();
+                aux.certificate                 = pd[5];
+		aux.certificate_str2file();
 		peer.add(aux);
 	}
 	public void remove(String name){
@@ -130,6 +130,14 @@ public class PeerData {
 	public Peer getByID(int id){
     for(Peer peer1 : peer){
         if(peer1.id == id)
+            return peer1;
+    }
+  	return null;
+  }
+        
+        public Peer getByIP(String ip){
+    for(Peer peer1 : peer){
+        if(peer1.ip.equals(ip))
             return peer1;
     }
   	return null;

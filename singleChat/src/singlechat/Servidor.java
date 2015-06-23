@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.security.KeyStore;
 import java.security.MessageDigest;
+import java.util.concurrent.TimeUnit;
 import javax.net.ServerSocketFactory;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -40,7 +41,7 @@ public class Servidor extends Thread{
     InetAddress ip; //endereço IP do cliente
     String name; //nome do usuário que tá no chat
     char key[]; //senha do usuário do chat
-    String certificate; //o endereço do meu certificado
+    String certificate; //o meu certificado em formato string
     
         //Conjunto de codificações para descriptografar mensagens recebidas
     private final String[] codificacao = {"SSL_RSA_WITH_RC4_128_MD5"};
@@ -55,15 +56,14 @@ public class Servidor extends Thread{
         try{
             name = setName;
             id = name.hashCode();
+            if(id < 0) id *= -1;
             ip = InetAddress.getLocalHost();//server.getInetAddress();
             key = sha1(setKey).toCharArray();
             program = setProgram;
-            //certificate = createCertificate(name, key);
+            certificate = createCertificate(id, key);
             
-            //System.exit(0);
-            
-            /*ks = KeyStore.getInstance("JKS");
-            ks.load(new FileInputStream(name), key);
+            ks = KeyStore.getInstance("JKS");
+            ks.load(new FileInputStream("certificados/"+id+".cert"), key);
             
                 //cria um caminho de certificação baseado em X509
             kmf = KeyManagerFactory.getInstance("SunX509");
@@ -75,24 +75,17 @@ public class Servidor extends Thread{
             
                 //Iniciando o servidor...
             ssf = contextoSSL.getServerSocketFactory();
-            server = (SSLServerSocket) ssf.createServerSocket(SingleChat.DOORSERVIDOR);*/
+            server = (SSLServerSocket) ssf.createServerSocket(SingleChat.DOORSERVIDOR);
             
             //connectToServer();
-            FileInputStream fin= new FileInputStream( SingleChat.CERTIFICADOSERVIDOR);
-            //System.out.println(fin.toString());
-           
-            byte a;
-            byte var= new byte[999];
-            int i = 0;
-            while((a = fin, read())!= null){
-                var[i] = a;
-                i++;
-            }
-            
+                        
             returnToClient(SingleChat.IPSERVIDOR, 
-                    "MASTER_PEER CONNECT " + certificate.length() + " " + key + "\n\n");
+                    "MASTER_PEER CONNECT " + certificate.length() + "\n" + certificate + "\n\n");
+            
+            
         }catch(Exception e){
             System.out.println("FALHA ALOCAR NO SERVIDOR PRINCIPAL: " + e);
+            System.exit(0);
         }
     }
     
@@ -170,24 +163,15 @@ public class Servidor extends Thread{
         String  auxfriendIP;
         char  auxkey[];
         
-        PeerData.Peer p = null;
-        
-        if(friendID.equals(SingleChat.IPSERVIDOR)){
-            
-            auxcertificate = SingleChat.CERTIFICADOSERVIDOR;
+        if(friendID.equals(SingleChat.IPSERVIDOR)){    
+            auxcertificate = ListaAmigos.fromFileToString(SingleChat.CERTIFICADOSERVIDOR);
             auxfriendIP = SingleChat.IPSERVIDOR;
             auxkey = SingleChat.PASSWORDSERVIDOR;
-                       
-
-            //p.certificate = "server_certificate.cert";//SingleChat.CERTIFICADOSERVIDOR;
-            //p.friendIP = SingleChat.IPSERVIDOR;
-            //p.key = SingleChat.PASSWORDSERVIDOR;
         }
         else{
-            auxcertificate = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID)).certificate;
+            auxcertificate = "certificados/" + friendID + ".cert";
             auxfriendIP = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID)).friendIP;
             auxkey = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID)).key;
-            //p = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID));
         }
              
         try{
@@ -267,25 +251,31 @@ public class Servidor extends Thread{
         return senhaCriptografada;
     }
     
-    private String createCertificate(String name, char key[]){
+    private String createCertificate(int id, char key[]){
         String pass = new String(key);
+        String fileName = "certificados/" + id + ".cert";
         try{ //CN=alex, OU=ufpel, O=ufpel, L=pelotas, ST=rs, C=br
             String toExec = "keytool -genkey -noprompt " +
                         " -alias " + name + " " +
                             //CN=alex, OU=CDTec, O=UFPel, L=Pelotas, ST=RS, C=BR
                         " -dname \"CN="+ name +", OU=CDTec, O=UFPel, L=Pelotas, S=RS, C=BR\" " +
                         " -keyalg RSA" +
-                        " -keystore "+ name +".cert " +
+                        " -keystore "+ fileName +
                         " -storepass "+ pass +" " +
                         " -keypass "+ pass ;
             //toExec = "gedit";
             String [] commands = { "bash", "-c", toExec };
             Runtime.getRuntime().exec(commands);
-            //Runtime rt = Runtime.getRuntime();
-            //Process pr = rt.exec(toExec);
-            System.out.println(toExec);
+            Thread.sleep(1000); //pra dar tempo do arquivo ser criado localmente
+            FileInputStream fis = new FileInputStream(fileName);
+            //se nao carregar, vai dar falha
+            fis.close();
+            
+            return ListaAmigos.fromFileToString(fileName);
+            
         }catch(Exception e){
             System.out.println("Falha ao criar o certificado: " + e);
+            System.exit(0); //sem certificado nao pode continuar
         }
         
         return "";

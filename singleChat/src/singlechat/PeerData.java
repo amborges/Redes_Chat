@@ -74,29 +74,18 @@ public class PeerData {
             chat.listened(msg);
         }
         	
-        public boolean setCertificate(byte b[]){
-            if(certificate != null){ //vai que esteja vazio...
-                try{
-                    FileOutputStream fos = new FileOutputStream("certificates/"+certificate);
-                    fos.write(b);
-                    fos.close();
-                    return true;
-                }catch(Exception e){
-                    System.out.println("Falha ao alocar o certificado de " + name);
-                    return false;
+        public FileInputStream certificate_str2file(){
+            //Dado uma versão do certificado em string, cria e retorna um arquivo localmente
+            try{
+                FileOutputStream fos = new FileOutputStream("certificados/" + id + ".cert");
+                char cc[] = certificate.toCharArray();
+                for(char aaa : cc){
+                    fos.write((byte)aaa);
                 }
-            }
-            return false;
-        }
-
-        public FileInputStream getCertificate(){
-            if(certificate != null){
-                try{
-                    return new FileInputStream("certificates/"+certificate);
-                }catch(Exception e){
-                    System.out.println("Falta ao recuperar certificado de " + name);
-                    return null;
-                }
+                fos.close();
+                return new FileInputStream("certificados/" + id + ".cert");
+            }catch(Exception e){
+                System.out.println("Falha ao criar certificado local: " + e);
             }
             return null;
         }

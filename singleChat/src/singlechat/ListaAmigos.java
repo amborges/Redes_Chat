@@ -5,6 +5,8 @@
  */
 package singlechat;
 
+import java.io.FileInputStream;
+import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -118,15 +120,6 @@ public class ListaAmigos extends Application{
     }
     
     public void iniciaConversa(PeerData.Peer peer){
-        //System.out.println("entrou em inicia conversa");
-        /*try{
-            if(!onlineFriends.get(peer.name).inChat()){
-                System.out.println("abre ou nao");
-                onlineFriends.get(peer.name).startChat(new Stage(), this);
-            }
-        }catch(Exception e){
-            System.out.println("LA_ Falha ao abrir chat: " + e);
-        }*/
         if(!onlineFriends.getByID(peer.id).inChat()){ //se há uma janela aberta
           // onlineFriends.getByID(id).automaticStartChat(this);
            Platform.runLater(new Runnable(){
@@ -193,5 +186,34 @@ public class ListaAmigos extends Application{
             String recmsg = "ACCEPT_TALKING " + id + "\n\n";
             Servidor.returnToClient(onlineFriends.getByID(theFriendID).friendIP, recmsg);
         }
+    }
+    
+    static public String fromFileToString(String filename){
+        //Dado um aquivo qualquer, transforma ele em uma string
+        try{
+            FileInputStream fis = new FileInputStream(filename);
+            
+            ArrayList<Byte> b = new ArrayList<>();
+            
+            byte a[] = new byte[1];
+            char c[];
+            
+            while(fis.read(a) != -1){
+                b.add(a[0]);
+            }
+            
+            fis.close();
+            
+            c = new char[b.size()];
+            int i = 0;
+            for(Byte B : b){
+                c[i++] = (char)B.byteValue();
+            }
+            
+            return new String(c);
+        } catch(Exception e){
+            System.out.println("Falha ao gerar String apartir de um arquivo: " + e);
+        }
+        return null;
     }
 }

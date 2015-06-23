@@ -1,23 +1,20 @@
 package SERVER;
 
 
-import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import javax.net.ssl.SSLServerSocket;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
-import java.net.Socket;
 import java.security.KeyStore;
-import java.util.ArrayList;
 import javax.net.ServerSocketFactory;
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 
 
 public class PeerMaster{
@@ -75,7 +72,9 @@ public class PeerMaster{
                     System.out.println("CONECTANDO NOVO CLIENTE!");
                     
                         //<id>,<name>,<ip>,<status>,<certificate>
-                    String dataPeer = msgSplit[2].hashCode() + "," + 
+                    int idhashed = msgSplit[2].hashCode();
+                    if(idhashed < 0) idhashed *= -1;
+                    String dataPeer = idhashed + "," + 
                         msgSplit[2].replaceAll("\n","") + "," + clientIP + 
                         ",ONLINE";// + msgSplit[3].replaceAll("\n", "") + "";
                     listOfPeers.add(dataPeer, msgSplit[3].getBytes());
@@ -125,14 +124,14 @@ public class PeerMaster{
 			
             for(int i = 0; i < listOfPeers.size(); i++){
                 System.out.println("Sending peers to " + listOfPeers.get(i).name);
-                answer(listOfPeers.get(i).ip, msg);
+                answer(listOfPeers.get(i), msg);
             }
         }
     }
     
     public static void returnPeers(String ip){
         
-				if(!listOfPeers.isEmpty()){
+	if(!listOfPeers.isEmpty()){
             
             String msg = "PEER_GROUP ";
             for(int i = 0; i < listOfPeers.size(); i++){
@@ -143,19 +142,48 @@ public class PeerMaster{
                         listOfPeers.get(i).key + "," + "\n";
             }
             msg += "\n\n";  
-            answer(ip, msg);
+            answer(listOfPeers.getByIP(ip), msg);
         }
     }
     
-    private static void answer(String ip, String msg){
+    private static void answer(PeerData.Peer peer, String msg){
         try{
-						SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-            Socket client = factory.createSocket(ip, 6991);
-						
-						//Socket client = new Socket(ip, 6991);
-            ObjectOutputStream saida = new ObjectOutputStream(client.getOutputStream());
-            saida.flush();
-            saida.writeUTF(msg);
+            KeyStore ks = KeyStore.getInstance("JKS");
+            //ks.load(peer.getCertificate(), new String(peer.key));
+            ks.load(peer.getCertificate(), peer.key);
+            
+                //cria um caminho de certificação baseado em X509
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf.init(ks, peer.key);
+            
+                //cria um SSLContext segundo o protocolo informado
+            SSLContext contextoSSL = SSLContext.getInstance("SSLv3");
+            contextoSSL.init(kmf.getKeyManagers(), null, null);
+            
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(
+                    TrustManagerFactory.getDefaultAlgorithm());
+                        
+            tmf.init(ks);
+            TrustManager tms[] = tmf.getTrustManagers();
+            
+            KeyManagerFactory keymf = KeyManagerFactory.getInstance(
+                KeyManagerFactory.getDefaultAlgorithm());
+            
+            keymf.init(ks, peer.key);
+            KeyManager kms[] = keymf.getKeyManagers();
+            
+            contextoSSL = SSLContext.getInstance("SSL");
+            contextoSSL.init(kms, tms, null);
+            
+            SSLSocketFactory ssf = contextoSSL.getSocketFactory();
+            
+            SSLSocket saida = (SSLSocket) ssf.createSocket(peer.ip, 6991);
+            
+            ObjectOutputStream sender = new ObjectOutputStream(saida.getOutputStream());
+            sender.flush();
+            sender.writeUTF(msg);
+            sender.close();
+            
             saida.close();
         }catch(Exception e){
             System.out.println("Falha em responder ao aplicativo cliente: " + e);
