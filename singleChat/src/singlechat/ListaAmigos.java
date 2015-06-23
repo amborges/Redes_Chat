@@ -155,14 +155,20 @@ public class ListaAmigos extends Application{
     public void reload(String peer[]){
         //atualiza a lista de amigos onlines
         //cada array é no formato
-        //<PEER_ID>,<PEER_NAME>,<PEER_IP>,<PEER_STATUS>,<PEER_KEY>
+        //<PEER_IP>\n<PEER_CERTIFICADO>
+        //usando tb o peer_key entre ambos
         //System.out.println(peer[0]);
         if(!onlineFriends.isEmpty()){
             onlineFriends.clear();
         }
         
-        for(int i = 0; i < peer.length; i++){
-            onlineFriends.add(peer[i]);
+        String cert, pass, ip;
+        
+        for(int i = 0; i < peer.length; i = i + 3){
+            ip = peer[i];
+            pass = peer[i+1];
+            cert = peer[i+2];
+            onlineFriends.add(cert, pass, ip);
         }
     }
     

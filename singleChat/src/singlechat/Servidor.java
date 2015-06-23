@@ -11,7 +11,6 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.security.KeyStore;
 import java.security.MessageDigest;
-import java.util.concurrent.TimeUnit;
 import javax.net.ServerSocketFactory;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -266,7 +265,7 @@ public class Servidor extends Thread{
             //toExec = "gedit";
             String [] commands = { "bash", "-c", toExec };
             Runtime.getRuntime().exec(commands);
-            Thread.sleep(1000); //pra dar tempo do arquivo ser criado localmente
+            Thread.sleep(2000); //pra dar tempo do arquivo ser criado localmente
             FileInputStream fis = new FileInputStream(fileName);
             //se nao carregar, vai dar falha
             fis.close();

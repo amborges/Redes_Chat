@@ -5,8 +5,6 @@
  */
 package singlechat;
 
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.util.Calendar;
 import javafx.application.Application;
 import javafx.event.ActionEvent;

@@ -8,6 +8,7 @@ package singlechat;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.security.KeyStore;
 import java.util.ArrayList;
 import javafx.stage.Stage;
 
@@ -102,6 +103,26 @@ public class PeerData {
         aux.status      = pd[3];
         aux.key         = pd[4].toCharArray();
         aux.certificate	= pd[5];
+        peer.add(aux);
+    }
+    public void add(String certificado, String senha, String ip){
+        Peer aux 			= new Peer();
+        aux.ip = ip;
+        aux.status  =   "ONLINE";
+        aux.key = senha.toCharArray();
+        aux.certificate = certificado;
+
+        try{
+            KeyStore ks = KeyStore.getInstance("JKS");
+            ks.load(aux.certificate_str2file(), aux.key);
+            aux.name = ks.aliases().nextElement();
+        }catch (Exception e){
+            System.out.println("Falha ao descobrir nome do peer: " + e);
+        }
+
+        aux.id = aux.name.hashCode();
+        if(aux.id < 0) aux.id *= -1;
+
         peer.add(aux);
     }
     public void remove(String name){

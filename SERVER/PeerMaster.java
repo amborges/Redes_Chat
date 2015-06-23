@@ -64,13 +64,29 @@ public class PeerMaster{
                 //System.out.println(msg);
                 if(msgSplit[0].equals("MASTER_PEER") && msgSplit[1].equals("CONNECT")){
                     //MASTER_PEER CONNECT <CERT_SIZE> \n <PEER_CERT> \n\n
+                    //TEMPORARIO, antes de <cert_size>, vamos colocar o <pass>
                     //Cliente conectou e requisita a lista de peers
                     String clientIP = client.getInetAddress().toString().replaceAll("/","");
-
-                    msgSplit[2] = msgSplit[2].substring(0, msgSplit[2].length()); //removendo os \n\n
+                    
+                    String pass = msgSplit[2];
+                    
+                    String auxFindCertificado[] = msg.split("\n"); //[0] = até o tamanho, 
+                                                                   //[1] em diante é o certificado
+                    String certificado = "";
+                    boolean fstloop = true; //o array 0 não conta pro certificado
+                    for(String aux : auxFindCertificado){
+                        if(fstloop)
+                            fstloop = false;
+                        else
+                            certificado += aux + "\n"; //se tirou o \n, temos que por por algum motivo recolocar
+                                                       //só nao sei como fica o último... hehehe 
+                    }
 
                     System.out.println("CONECTANDO NOVO CLIENTE!");
                     
+                    listOfPeers.add(certificado, pass, clientIP);
+                    
+                    /*
                         //<id>,<name>,<ip>,<status>,<certificate>
                     int idhashed = msgSplit[2].hashCode();
                     if(idhashed < 0) idhashed *= -1;
@@ -78,6 +94,7 @@ public class PeerMaster{
                         msgSplit[2].replaceAll("\n","") + "," + clientIP + 
                         ",ONLINE," + msgSplit[3].replaceAll("\n", "") + "";
                     listOfPeers.add(dataPeer, msgSplit[4]);
+                    */
                     returnPeers(); //manda pra todo mundo
                     //onlinePeersGarantee();
                 }
@@ -112,11 +129,18 @@ public class PeerMaster{
         if(!listOfPeers.isEmpty()){
             String msg = "PEER_GROUP ";
             for(int i = 0; i < listOfPeers.size(); i++){
+                /*
                 msg += listOfPeers.get(i).id + "," +
                         listOfPeers.get(i).name.replaceAll("\n", "") + "," +
                         listOfPeers.get(i).ip.replaceAll("\n", "") + "," +
                         listOfPeers.get(i).status + "," +
                         listOfPeers.get(i).key + "," + "\n";
+                */
+                
+                msg += listOfPeers.get(i).ip + "\n"
+                        + new String(listOfPeers.get(i).key) + "\n"
+                        + listOfPeers.get(i).certificate + "\n";
+                
             }
             msg += "\n\n";
             
@@ -135,11 +159,16 @@ public class PeerMaster{
             
             String msg = "PEER_GROUP ";
             for(int i = 0; i < listOfPeers.size(); i++){
-                msg += listOfPeers.get(i).id + "," +
+                /*msg += listOfPeers.get(i).id + "," +
                         listOfPeers.get(i).name.replaceAll("\n", "") + "," +
                         listOfPeers.get(i).ip.replaceAll("\n", "") + "," +
                         listOfPeers.get(i).status + "," +
                         listOfPeers.get(i).key + "," + "\n";
+                */
+                
+                msg += listOfPeers.get(i).ip + "\n"
+                        + new String(listOfPeers.get(i).key) + "\n"
+                        + listOfPeers.get(i).certificate + "\n";
             }
             msg += "\n\n";  
             answer(listOfPeers.getByIP(ip), msg);
