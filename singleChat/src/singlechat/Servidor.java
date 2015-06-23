@@ -164,18 +164,19 @@ public class Servidor extends Thread{
         
         if(friendID.equals(SingleChat.IPSERVIDOR)){    
             auxcertificate = ListaAmigos.fromFileToString(SingleChat.CERTIFICADOSERVIDOR);
+          
             auxfriendIP = SingleChat.IPSERVIDOR;
             auxkey = SingleChat.PASSWORDSERVIDOR;
         }
         else{
-            auxcertificate = "certificados/" + friendID + ".cert";
+            auxcertificate = "certificados\\" + friendID + ".cert";
             auxfriendIP = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID)).friendIP;
             auxkey = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID)).key;
         }
              
         try{
             KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load(new FileInputStream(auxcertificate), auxkey);
+            ks.load(new FileInputStream(SingleChat.CERTIFICADOSERVIDOR), SingleChat.PASSWORDSERVIDOR);
             
                 //cria um caminho de certificação baseado em X509
             KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
