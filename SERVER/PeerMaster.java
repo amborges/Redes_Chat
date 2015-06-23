@@ -20,7 +20,7 @@ import javax.net.ssl.TrustManagerFactory;
 public class PeerMaster{
 	//modificado por lucas
     static private PeerData listOfPeers;
-    static private char     SERVERPASSWORD[]    = new String("masterpeerpass").toCharArray();
+    static private char     SERVERPASSWORD[]    = "masterpeerpass".toCharArray();
     static private String   SERVERKEYSTORE 	= "SERVER/server_certificate.cert";
     static private int      DOOR         	= 6991;
 
@@ -76,8 +76,8 @@ public class PeerMaster{
                     if(idhashed < 0) idhashed *= -1;
                     String dataPeer = idhashed + "," + 
                         msgSplit[2].replaceAll("\n","") + "," + clientIP + 
-                        ",ONLINE";// + msgSplit[3].replaceAll("\n", "") + "";
-                    listOfPeers.add(dataPeer, msgSplit[3].getBytes());
+                        ",ONLINE," + msgSplit[3].replaceAll("\n", "") + "";
+                    listOfPeers.add(dataPeer, msgSplit[4]);
                     returnPeers(); //manda pra todo mundo
                     //onlinePeersGarantee();
                 }

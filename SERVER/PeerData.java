@@ -57,7 +57,7 @@ public class PeerData {
 	
 	ArrayList<Peer> peer = new ArrayList<Peer>();
 	
-	public void add(String peerData, byte certificate[]){
+	public void add(String peerData, String setcertificate){
 		String pd[] = peerData.split(",");
 		Peer aux 			= new Peer();
 		aux.id	  			= Integer.parseInt(pd[0]);
@@ -65,7 +65,7 @@ public class PeerData {
 		aux.ip	  			= pd[2];
 		aux.status			= pd[3];
 		aux.key                         = pd[4].toCharArray();
-                aux.certificate                 = pd[5];
+                aux.certificate                 = setcertificate;
 		aux.certificate_str2file();
 		peer.add(aux);
 	}
