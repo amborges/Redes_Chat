@@ -263,7 +263,16 @@ public class Servidor extends Thread{
                         " -storepass "+ pass +" " +
                         " -keypass "+ pass ;
             //toExec = "gedit";
-            String [] commands = { "bash", "-c", toExec };
+            String commands[];
+            if(System.getProperty("os.name").toLowerCase().indexOf("win") >= 0){
+                String comWin[] = { "cmd", "/c", toExec }; //windows
+                commands = comWin;
+            }
+            else{
+                String comLin[] = { "bash", "-c", toExec }; //linux
+                commands = comLin;
+            }
+            
             Runtime.getRuntime().exec(commands);
             Thread.sleep(2000); //pra dar tempo do arquivo ser criado localmente
             FileInputStream fis = new FileInputStream(fileName);
