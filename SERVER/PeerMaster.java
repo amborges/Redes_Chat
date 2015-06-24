@@ -81,6 +81,8 @@ public class PeerMaster{
                             certificado += aux + "\n"; //se tirou o \n, temos que por por algum motivo recolocar
                                                        //só nao sei como fica o último... hehehe 
                     }
+                    
+                    certificado = certificado.substring(0, certificado.length()-1);
 
                     System.out.println("CONECTANDO NOVO CLIENTE!");
                     
@@ -260,6 +262,4 @@ public class PeerMaster{
             System.out.println("Falha em verificar consistencia de cliente conectado: " + e);
         }*/
     }
-    
-    
 }

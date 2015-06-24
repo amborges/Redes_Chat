@@ -31,19 +31,51 @@ public class PeerData {
 		public FileInputStream getCertificate(){
 			if(certificate != null){
 				try{
-					return new FileInputStream("certificados/"+id+".cert");
+                                    return new FileInputStream("SERVER/certificados/"+id+".cert");
 				}catch(Exception e){
-					System.out.println("Falta ao recuperar certificado de " + name);
-					return null;
+                                    System.out.println("Falta ao recuperar certificado de " + name);
+                                    return null;
 				}
 			}
 			return null;
 		}
                 
+                public void setNameAndID(){
+			if(certificate != null){
+				try{
+                                    certificate_tmp();
+                                    KeyStore ks = KeyStore.getInstance("JKS");
+                                    ks.load(new FileInputStream("SERVER/certificados/tmp.cert"), key);
+                                    
+                                    name = ks.aliases().nextElement();
+                                    id = name.hashCode();
+                                    if(id < 0) id *= -1;
+				}catch(Exception e){
+					System.out.println("Falta ao setar nome e id do peer " + name);
+				}
+			}
+		}
+                
+                public void certificate_tmp(){
+                    //Dado uma versão do certificado em string, cria e retorna um arquivo localmente
+                    try{
+                        FileOutputStream fos = new FileOutputStream("SERVER/certificados/tmp.cert");
+                        
+                        char cc[] = certificate.toCharArray();
+                        for(char aaa : cc){
+                            fos.write((byte)aaa);
+                        }
+                        fos.close();
+                        Thread.sleep(1000); //pra dar tempo do arquivo ser criado localmente
+                    }catch(Exception e){
+                        System.out.println("Falha ao criar certificado: "+e);
+                    }
+                }
+                
                 public void certificate_str2file(){
                     //Dado uma versão do certificado em string, cria e retorna um arquivo localmente
                     try{
-                        FileOutputStream fos = new FileOutputStream("certificados/" + id + ".cert");
+                        FileOutputStream fos = new FileOutputStream("SERVER/certificados/" + id + ".cert");
                         char cc[] = certificate.toCharArray();
                         for(char aaa : cc){
                             fos.write((byte)aaa);
@@ -76,19 +108,9 @@ public class PeerData {
             aux.status  =   "ONLINE";
             aux.key = senha.toCharArray();
             aux.certificate = certificado;
+            aux.setNameAndID();
             aux.certificate_str2file();
             
-            try{
-                KeyStore ks = KeyStore.getInstance("JKS");
-                ks.load(aux.getCertificate(), aux.key);
-                aux.name = ks.aliases().nextElement();
-            }catch (Exception e){
-                System.out.println("Falha ao descobrir nome do peer: " + e);
-            }
-            
-            aux.id = aux.name.hashCode();
-            if(aux.id < 0) aux.id *= -1;
-            	
             peer.add(aux);
 	}
 	public void remove(String name){
