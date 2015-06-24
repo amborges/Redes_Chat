@@ -29,18 +29,22 @@ import javax.net.ssl.TrustManagerFactory;
 public class Servidor extends Thread{
     
 
-    //propriedades
+    //propriedades de conexão com servidor
     SSLServerSocket server; //atributo ouvidor do servidor
     SSLSocket client; //atributo para responder as mensagens
     
     ListaAmigos program; //aplicativo GUI principal
     
-    //atributos do protocolo
+    //------------ Atributos do usuário protocolo --------------------
     int id; //identificador unico de rede, parte do protocolo
     InetAddress ip; //endereço IP do cliente
     String name; //nome do usuário que tá no chat
-    char key[]; //senha do usuário do chat
-    String certificate; //o meu certificado em formato string
+    
+    
+    //SETANDO ATRIBUTOS DO CERTIFICADO DO USUARIO
+    char[] senhaDoMeuCertificado = "123456".toCharArray(); //senha do usuário do chat
+    String caminhoDoMeuCertificado = "certificados/lucas.cert"; //o meu certificado em formato string
+    
     
         //Conjunto de codificações para descriptografar mensagens recebidas
     private final String[] codificacao = {"SSL_RSA_WITH_RC4_128_MD5"};
@@ -57,16 +61,15 @@ public class Servidor extends Thread{
             id = name.hashCode();
             if(id < 0) id *= -1;
             ip = InetAddress.getLocalHost();//server.getInetAddress();
-            key = sha1(setKey).toCharArray();
             program = setProgram;
-            certificate = createCertificate(id, key);
+            //certificate = createCertificate(id, key);
             
             ks = KeyStore.getInstance("JKS");
-            ks.load(new FileInputStream("certificados/"+id+".cert"), key);
+            ks.load(new FileInputStream(caminhoDoMeuCertificado), senhaDoMeuCertificado);
             
                 //cria um caminho de certificação baseado em X509
             kmf = KeyManagerFactory.getInstance("SunX509");
-            kmf.init(ks, key);
+            kmf.init(ks, senhaDoMeuCertificado);
             
                 //cria um SSLContext segundo o protocolo informado
             contextoSSL = SSLContext.getInstance("SSLv3");
@@ -76,11 +79,15 @@ public class Servidor extends Thread{
             ssf = contextoSSL.getServerSocketFactory();
             server = (SSLServerSocket) ssf.createServerSocket(SingleChat.DOORSERVIDOR);
             
-            //connectToServer();
-                        
-            returnToClient(SingleChat.IPSERVIDOR, 
-                    "MASTER_PEER CONNECT " + certificate.length() + "\n" + certificate + "\n\n");
             
+            
+            //connectToServer();
+            String meuCertEmString = ListaAmigos.fromFileToString(caminhoDoMeuCertificado);
+            returnToClient(SingleChat.IPSERVIDOR, 
+                    "MASTER_PEER CONNECT " + new String(senhaDoMeuCertificado) + " " + meuCertEmString.length() + "\n" + meuCertEmString + "\n\n");
+            
+            
+            System.out.println("TAMANHO DO MEU CERTIFICADO: "+meuCertEmString.length());
             
         }catch(Exception e){
             System.out.println("FALHA ALOCAR NO SERVIDOR PRINCIPAL: " + e);
@@ -226,7 +233,7 @@ public class Servidor extends Thread{
             SSLSocket retToClient=(SSLSocket) factory.createSocket(SingleChat.IPSERVIDOR, SingleChat.DOORSERVIDOR);
             ObjectOutputStream sender = new ObjectOutputStream(retToClient.getOutputStream());
             sender.flush();
-            sender.writeUTF("MASTER_PEER CONNECT " + name + " " + key + "\n\n");
+            sender.writeUTF("MASTER_PEER CONNECT " + name + " " + senhaDoMeuCertificado + "\n\n");
             sender.close();
             retToClient.close();
         }catch(Exception e){
