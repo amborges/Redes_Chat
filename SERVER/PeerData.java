@@ -43,6 +43,7 @@ public class PeerData {
                 public void setNameAndID(){
 			if(certificate != null){
 				try{
+                                    System.out.println("SENHA " + new String(key));
                                     certificate_tmp();
                                     KeyStore ks = KeyStore.getInstance("JKS");
                                     ks.load(new FileInputStream("SERVER/certificados/tmp.cert"), key);
