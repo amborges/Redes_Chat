@@ -15,6 +15,8 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 
 public class PeerMaster{
@@ -131,22 +133,16 @@ public class PeerMaster{
         if(!listOfPeers.isEmpty()){
             String msg = "PEER_GROUP ";
             for(int i = 0; i < listOfPeers.size(); i++){
-                /*
-                msg += listOfPeers.get(i).id + "," +
-                        listOfPeers.get(i).name.replaceAll("\n", "") + "," +
-                        listOfPeers.get(i).ip.replaceAll("\n", "") + "," +
-                        listOfPeers.get(i).status + "," +
-                        listOfPeers.get(i).key + "," + "\n";
-                */
+                //<ip_A>\n
+                //<key_A> //temporario
+                //<certificadoA>
                 
                 msg += listOfPeers.get(i).ip + "\n"
                         + new String(listOfPeers.get(i).key) + "\n"
-                        + listOfPeers.get(i).certificate + "\n";
+                        + URLEncoder.encode(listOfPeers.get(i).certificate) + "\n";
                 
             }
             msg += "\n\n";
-            
-						//System.out.println(msg);
 			
             for(int i = 0; i < listOfPeers.size(); i++){
                 System.out.println("Sending peers to " + listOfPeers.get(i).name);
@@ -161,16 +157,9 @@ public class PeerMaster{
             
             String msg = "PEER_GROUP ";
             for(int i = 0; i < listOfPeers.size(); i++){
-                /*msg += listOfPeers.get(i).id + "," +
-                        listOfPeers.get(i).name.replaceAll("\n", "") + "," +
-                        listOfPeers.get(i).ip.replaceAll("\n", "") + "," +
-                        listOfPeers.get(i).status + "," +
-                        listOfPeers.get(i).key + "," + "\n";
-                */
-                
                 msg += listOfPeers.get(i).ip + "\n"
                         + new String(listOfPeers.get(i).key) + "\n"
-                        + listOfPeers.get(i).certificate + "\n";
+                        + URLEncoder.encode(listOfPeers.get(i).certificate) + "\n";
             }
             msg += "\n\n";  
             answer(listOfPeers.getByIP(ip), msg);
@@ -180,7 +169,6 @@ public class PeerMaster{
     private static void answer(PeerData.Peer peer, String msg){
         try{
             KeyStore ks = KeyStore.getInstance("JKS");
-            //ks.load(peer.getCertificate(), new String(peer.key));
             ks.load(peer.getCertificate(), peer.key);
             
                 //cria um caminho de certificação baseado em X509
