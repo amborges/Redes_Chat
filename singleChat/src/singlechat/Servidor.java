@@ -85,9 +85,9 @@ public class Servidor extends Thread{
             
             //connectToServer();
             ListaAmigos.meuCertificado = ListaAmigos.fromFileToString(caminhoDoMeuCertificado);
-            
+            String certificadoCodificado = URLEncoder.encode(ListaAmigos.meuCertificado);
             returnToClient(SingleChat.IPSERVIDOR, 
-                    "MASTER_PEER CONNECT " + new String(senhaDoMeuCertificado) + " " + ListaAmigos.meuCertificado.length() + "\n" + ListaAmigos.meuCertificado + "\n\n");
+                    "MASTER_PEER CONNECT " + new String(senhaDoMeuCertificado) + " " + certificadoCodificado.length() + "\n" + certificadoCodificado + "\n\n");
             
             
             System.out.println("TAMANHO DO MEU CERTIFICADO: "+ListaAmigos.meuCertificado.length());

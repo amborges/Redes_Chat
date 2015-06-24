@@ -173,9 +173,6 @@ public class ListaAmigos extends Application{
             ip = peer[i];
             pass = peer[i+1];
             cert = URLDecoder.decode(peer[i+2]);
-            if(ListaAmigos.meuCertificado.equals(cert)){
-               System.out.println("CERTIFICADOS IGUAIS");
-            }
             onlineFriends.add(cert, pass, ip);
         }
     }
