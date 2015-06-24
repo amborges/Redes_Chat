@@ -90,6 +90,40 @@ public class PeerData {
             }
             return null;
         }
+    
+    public void setNameAndID(){
+			if(certificate != null){
+				try{
+                                    certificate_tmp();
+                                    KeyStore ks = KeyStore.getInstance("JKS");
+                                    System.out.println("Senha do amigo: " +new String(key));
+                                    ks.load(new FileInputStream("certificados/tmp.cert"), key);
+                                    
+                                    name = ks.aliases().nextElement();
+                                    id = name.hashCode();
+                                    if(id < 0) id *= -1;
+				}catch(Exception e){
+					System.out.println("Falta ao setar nome e id do peer " + name);
+				}
+			}
+		}
+    
+    public void certificate_tmp(){
+                    //Dado uma versão do certificado em string, cria e retorna um arquivo localmente
+                    try{
+                        FileOutputStream fos = new FileOutputStream("certificados/tmp.cert");
+                        
+                        char cc[] = certificate.toCharArray();
+                        for(char aaa : cc){
+                            fos.write((byte)aaa);
+                        }
+                        fos.close();
+                        Thread.sleep(1000); //pra dar tempo do arquivo ser criado localmente
+                    }catch(Exception e){
+                        System.out.println("Falha ao criar certificado: "+e);
+                    }
+                }
+    
     };
     
     ArrayList<Peer> peer;
@@ -112,19 +146,13 @@ public class PeerData {
         aux.key = senha.toCharArray();
         aux.certificate = certificado;
 
-        try{
-            KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load(aux.certificate_str2file(), aux.key);
-            aux.name = ks.aliases().nextElement();
-        }catch (Exception e){
-            System.out.println("Falha ao descobrir nome do peer: " + e);
-        }
-
-        aux.id = aux.name.hashCode();
-        if(aux.id < 0) aux.id *= -1;
+        aux.setNameAndID();
+        aux.certificate_str2file();
 
         peer.add(aux);
     }
+    
+    
     public void remove(String name){
         for(Peer peer1 : peer){
             if(peer1.name.equals(name)){
