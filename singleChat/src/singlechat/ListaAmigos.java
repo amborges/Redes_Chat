@@ -7,6 +7,7 @@
 package singlechat;
 
 import java.io.FileInputStream;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -164,29 +165,18 @@ public class ListaAmigos extends Application{
             onlineFriends.clear();
         }
         
-        String cert, pass, ip, aux;
-        int size, posAtual;
+        String peer[] = msg.split("\n");
         
-        //for(int i = 0; i < peer.length; i = i + 4){
-        for(int i = 0; i < msg.length();){
-            aux = msg.substring(i) ;
-            String peer[] = aux.split("\n");
-            
-            ip = peer[0];
-            pass = peer[1];
-            size = Integer.parseInt(peer[2]);
-            System.out.println("PRINTANDO SIZE: "+size);
-            
-            posAtual = i + ip.length() + 1 + pass.length() + 1 + peer[i+2].length() + 1;
-            if(posAtual + size >= msg.length()) size = msg.length() - posAtual;
-            cert = msg.substring(posAtual, posAtual + size);
+        String cert, pass, ip;
+        
+        for(int i = 0; i < peer.length; i = i + 3){
+            ip = peer[i];
+            pass = peer[i+1];
+            cert = URLDecoder.decode(peer[i+2]);
             if(ListaAmigos.meuCertificado.equals(cert)){
                System.out.println("CERTIFICADOS IGUAIS");
             }
             onlineFriends.add(cert, pass, ip);
-            
-            i = posAtual + size + 1;
-            
         }
     }
     

@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
+import java.net.URLEncoder;
 import java.security.KeyStore;
 import java.security.MessageDigest;
 import javax.net.ServerSocketFactory;
@@ -84,6 +85,7 @@ public class Servidor extends Thread{
             
             //connectToServer();
             ListaAmigos.meuCertificado = ListaAmigos.fromFileToString(caminhoDoMeuCertificado);
+            
             returnToClient(SingleChat.IPSERVIDOR, 
                     "MASTER_PEER CONNECT " + new String(senhaDoMeuCertificado) + " " + ListaAmigos.meuCertificado.length() + "\n" + ListaAmigos.meuCertificado + "\n\n");
             
@@ -129,7 +131,6 @@ public class Servidor extends Thread{
     
     private void trataMsg(String s){
         String m[] = s.split(" ");
-        //System.out.println("["+s+"]");
         //SEND_MSG <SIZE> <PEER_ID> <MSG>\n\n
         if(m[0].equals("SEND_MSG")){
             String msg = "";
