@@ -71,34 +71,12 @@ public class PeerMaster{
                     String clientIP = client.getInetAddress().toString().replaceAll("/","");
                     
                     String pass = msgSplit[2];
+                    String certificado = URLDecoder.decode(msgSplit[2]);
                     
-                    String auxFindCertificado[] = msg.split("\n"); //[0] = até o tamanho, 
-                                                                   //[1] em diante é o certificado
-                    String certificado = "";
-                    boolean fstloop = true; //o array 0 não conta pro certificado
-                    for(String aux : auxFindCertificado){
-                        if(fstloop)
-                            fstloop = false;
-                        else
-                            certificado += aux + "\n"; //se tirou o \n, temos que por por algum motivo recolocar
-                                                       //só nao sei como fica o último... hehehe 
-                    }
-                    
-                    certificado = certificado.substring(0, certificado.length()-1);
-
                     System.out.println("CONECTANDO NOVO CLIENTE!");
                     
                     listOfPeers.add(certificado, pass, clientIP);
                     
-                    /*
-                        //<id>,<name>,<ip>,<status>,<certificate>
-                    int idhashed = msgSplit[2].hashCode();
-                    if(idhashed < 0) idhashed *= -1;
-                    String dataPeer = idhashed + "," + 
-                        msgSplit[2].replaceAll("\n","") + "," + clientIP + 
-                        ",ONLINE," + msgSplit[3].replaceAll("\n", "") + "";
-                    listOfPeers.add(dataPeer, msgSplit[4]);
-                    */
                     returnPeers(); //manda pra todo mundo
                     //onlinePeersGarantee();
                 }
