@@ -1,0 +1,262 @@
+commit 57a89612dd75255fdc1a1156626ef280e1d78084
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Mon Jun 15 10:17:44 2015 -0300
+
+    Inclui um sistema extra de garantia de peers online, falta testar
+
+commit 51ae18ccfd9ff642d9b489fe0f93d0f6f86ff11a
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Fri Jun 12 16:23:18 2015 -0300
+
+    t1 funcional! Abre janela automática do chat :)
+
+commit 3da9b6b20f1b5623fbfc11032bb7978c7b4d3089
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Fri Jun 12 16:02:47 2015 -0300
+
+    t1 pronto!!!! Abre janela do contato quando enviado a mensagem!!!!!!!!!!
+
+commit a4224b3e60b4e59f496ebdde51b0f6486987b3ae
+Author: Lucas <Lucas@Lenovo>
+Date:   Fri Jun 12 13:49:19 2015 -0300
+
+    mensagem com espaços agora
+
+commit 98c07b7bb525dfceae4a97b720cc51e2604023be
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Fri Jun 12 13:23:34 2015 -0300
+
+    AGORA TA FUNCIONANDO
+
+commit 1dedfee32dd17b3b61aab5facc360b5bfd17b0c0
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Tue Jun 9 16:21:48 2015 -0300
+
+    Algumas modificacoes no peerdata do aplicativo. Problema em abrir janela automaticamente ainda permanece
+
+commit a5f4c744ac59793ab93074fb003783dc29c9b544
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Tue Jun 9 11:47:32 2015 -0300
+
+    problemas ao abrir janela de chat
+
+commit 6dfabab29389a53761979c6cd4a279ed3b48592b
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Tue Jun 9 11:20:12 2015 -0300
+
+    problema do ultimo conectado resolvido
+
+commit adaa6009c5a8cef9462f1813bf465cc1aac0d3bd
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Tue Jun 9 10:45:08 2015 -0300
+
+    peerdata do server esta imprimindo msg
+
+commit e427e868261a0c62ad39ebe6a59cd066d2c971e4
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Mon Jun 1 15:28:35 2015 -0300
+
+    peermaster otimizado e com todas as mensagens (testar se ainda da erro no ultimo usuario conectado). Ajustes gerais nas classes servidor e listaamigos (verificar se a mensagem vai para o amigo)
+
+commit 39c3c9e111a7a766cc474fbd9a00ddcb7eceb190
+Merge: e8f6fee 161c9e4
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Mon Jun 1 11:48:09 2015 -0300
+
+    Merge branch 'master' of https://github.com/amborges/Redes_Chat
+    
+    Conflicts:
+    	SERVER/PeerMaster.java
+    	singleChat/build/built-jar.properties
+    	singleChat/build/classes/singlechat/SingleChat.class
+    	singleChat/dist/singleChat.html
+    	singleChat/dist/singleChat.jar
+    	singleChat/dist/singleChat.jnlp
+    	singleChat/nbproject/private/private.xml
+    	singleChat/src/singlechat/SingleChat.java
+
+commit e8f6fee1ea259f0d25c3d9506c9a992f8fb66f3f
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Mon Jun 1 11:44:10 2015 -0300
+
+    reuso de codigo com servidor.java
+
+commit 161c9e4fc4ad86224834c77ee9a9a54ef6fa7547
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Mon Jun 1 11:39:30 2015 -0300
+
+    servidor ouvindo
+
+commit d281d4dcb75b5e3339d1c4196e77d2893d7f271b
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Mon Jun 1 10:41:45 2015 -0300
+
+    linhas descomentadas em servidor, a ip do servidor alocado localmente para testes
+
+commit c3da23a636cdf90005e6e8f42faf57ed1aa9397d
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Thu May 28 19:59:52 2015 -0300
+
+    removi todas as portas extras utilizadas para testar na mesma maquina o singleChat e o peerMaster, apartir de agora ambos devem ser executados em maquinas separadas.
+
+commit 8492bd70df028e5e8c80eb1a2d0da500332691a0
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Wed May 27 15:11:27 2015 -0300
+
+    Codigo todo arrumado, falta fazer teste real usando varios computadores, pois nao consigo conversar comigo mesmo. Preciso ainda resolver o detalhe das respostas de cada mensagem, ainda nao olhei direito isso. em Servidor.java, metodo finalize, eu deixei uma linha comentada para ele nao excluir a pessoa do masterpeer, permitindo que eu possa obter essa pessoa em um segundo acesso. Isso me faz lembrar, o masterpeer nao devolve a ti mesmo quando tu acaba de entrar, isso pode significar que as pessoas nao obterao o contato da ultima pessoa que logou no chat. Eh preciso verificar depois o sistema de seguranca nas mensagens, a ser definida ainda
+
+commit ed961e1fa6977047d60ac521df627fa2fe47347c
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Wed May 27 00:00:08 2015 -0300
+
+    Codigos limpos, agora estou corrigindo o codigo para permitir que eu mantenha um chat no mesmo computador que o peermaster, problemas com portas (ja que o protocolo manda ter apenas um, para testar eu estou usando uma porta testes, e preciso fazer nao ter colisoes por causa disso)
+
+commit eed188378c587d6812b0217378ac13ba2a9d06f4
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Tue May 26 15:16:05 2015 -0300
+
+    Codigo ajeitado para uso com um unico servidor, janela de amigos online ativo, falta limpar o codigo e testar em grupo para ver se esta ok, pois com um unico servidor local, nao consegui fazer ele falar consigo mesmo.
+
+commit be9c24962b540c5b46c403c042d1f0f8933d2a0b
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Fri May 22 00:03:11 2015 -0300
+
+    Algumas correcoes no servidor e masterpeer, masterpeer precisa desconectar o cliente, e adaptar os codigos para armazenarem os dados de chave publica. Ainda nao consegui fazer o combobox dinamico
+
+commit 07a80fc8753a8855f0ad7e8562735922841b934f
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Fri May 15 09:45:46 2015 -0300
+
+    Servidores unificados, deixei o masterpeer em um pacote a parte, ele possui uma classe peerdata, que eh similar ao peerdata que temos no projeto principal, que eu criei ontem. Estou tentando resolver um problema do masterpeer de nao adicionar pessoas novas (lixo) quando eu faco uma requisicao. Eu acho que eh apenas um detalhe. Nao exclui os servidores antigos, apenas deixei eles comentados. Precisamos adequar todo o programa para trabalhar com o mesmo peerdata. Ainda nao testei abrir a janela de chat, e removi o uso do radiobutton. No trabalho de DS o Paulo usou um listener num combobox, estou tentando fazer o mesmo: sempre que o listaAmigos atualiza, o combobox atualiza junto. Vamos ver se consigo
+
+commit d2f59efad7042a713b02cbe010540640a1690fe7
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Thu May 14 23:44:28 2015 -0300
+
+    Codigo atualizado, usando um unico servidor, codigos originais ainda intactos, alterando o master peer para trabalhar corretamente conforme o protocolo, e ajustando o servidor para receber chamadas unicas. Codigo precisa ser finalizado, eu no momento estou tendo falha no masterpeer quando conecto. Atualizando git para manter historico.
+
+commit 14d5e51d8c0f220e3f81fe18062da7b0728e20d7
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Wed May 13 23:19:50 2015 -0300
+
+    adicionando o peer master
+
+commit c3e672218a562052c1291c0c3fe03e48a821903b
+Author: lucas <lucas@macbookosbonine>
+Date:   Tue May 5 22:17:44 2015 -0300
+
+    Testando nova conexão do socket
+
+commit 441458fd0f57e37da55f440a9ff762b35ae426ac
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Tue May 5 13:38:55 2015 -0300
+
+    Complementando o arquivo README com informacoes sobre o repositorio online
+
+commit 1a61eb406460cd9c6ae9ca16cf16098e4676040c
+Author: tamarameneghetti <tmdcruz@inf.ufpel.edu.br>
+Date:   Tue May 5 13:16:50 2015 -0300
+
+     Readme com integrantes
+
+commit 185bc9950dd5501488bf62a0d423f0f90b883ade
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Tue May 5 09:49:16 2015 -0300
+
+    botoes funcionando da lista de amigos mas n abre janela de bate papo :/
+
+commit b648d0e06bc43d9c7f136c6052e62ecd7ca6042c
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Tue May 5 09:32:03 2015 -0300
+
+    feitas as melhorias comentandas no grupo
+
+commit 2d704c3fb5646543a6eb40c2975845c370fb2745
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Tue May 5 09:29:39 2015 -0300
+
+    adiocionando campos
+
+commit 6b4cf509561a2204f201bfaa952a9b74374b7731
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Tue May 5 09:27:08 2015 -0300
+
+    debugando
+
+commit 7afbf85f536d4f40d87878c33000970d3c07d485
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Tue May 5 09:23:04 2015 -0300
+
+    arrumando server
+
+commit d394533aac06e63999c4a7840040f76bdb76edbb
+Author: tamara <tmdcruz@inf.edu.br>
+Date:   Tue May 5 09:19:32 2015 -0300
+
+    resolvendo problema da nao abertura das janelas
+
+commit 33a82be4830eba87985c996ed6cf72d4a9cd9439
+Author: lucas <lucas@169.254.166.144>
+Date:   Tue May 5 08:22:27 2015 -0300
+
+    Chat meio caminho 4
+
+commit 85e74bce22a2df32a3fd6590edcb9551c94092f3
+Author: lucas <lucas@169.254.166.144>
+Date:   Tue May 5 07:50:43 2015 -0300
+
+    Chat meio caminho 3
+
+commit 4944c1d68dbc2320b6145d48860fc019dd1b02a6
+Author: lucas <lucas@169.254.166.144>
+Date:   Tue May 5 05:53:33 2015 -0300
+
+    Chat meio caminho 2
+
+commit f7b1cac7d4fee2ac9461d07d4ce6ec2923157e24
+Author: lucas <lucas@169.254.166.144>
+Date:   Tue May 5 05:27:00 2015 -0300
+
+    Chat meio caminho
+
+commit e4f1a00578b578de8e8f55ae8879683845c66d04
+Author: lucas <lucas@169.254.166.144>
+Date:   Tue May 5 03:08:16 2015 -0300
+
+    Agora anda os protocolos
+
+commit 3720220b6c4b4226eee60c9424f6ce6b81c09eeb
+Author: lucas <lucas@macbookosbonine.home>
+Date:   Mon May 4 21:51:39 2015 -0300
+
+    Atualização das portas e agora a msg vai
+
+commit c4cd83e9460d14ee27108684a34d11cf4e55c7d7
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Sun May 3 10:06:33 2015 -0300
+
+    Chat mais completo, agora ele seleciona portas incrementalmente, chats nao sao abertos se ja ouver um aberto. Possui um server ouvindo chamadas de chat, nao sei se funciona, pois nao tenho ninguem em rede. Eh preciso complementar o software conforme o protocolo
+
+commit 2b75a5cf8a6f20009414058dc2e77948f5c7cf74
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Sat May 2 08:21:58 2015 -0300
+
+    Chat nao abre duas vezes, mas ainda tem o problema dos lado servidor de cada chat que nao encerra junto
+
+commit d56d8fc368da4f9f2adc808307b88d977988d8a3
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Sat May 2 07:34:56 2015 -0300
+
+    Sistema conversa consigo mesmo, ou seja, ao selecionar enviar uma mensagem de texto, o lado servidor do chat ouve e envia uma mensagem automatica. Apenas uma vez, estou tentando descobrir o que acontece que ele nao faz isso mais vezes. E mais, Ainda temos que fazer com que nao seja possivel abrir dois chats para um mesmo contato.
+
+commit c30ee45b02d0109a02a236eed62265dc43f9a6e3
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Mon Apr 27 20:04:41 2015 -0300
+
+    Foi adicionado uma janela de escolha de amigos onlines, e abre um chat pra cada amigo
+
+commit d4892750051646ee1ec688721fc21d9f12f67a01
+Author: Alex Borges <amborges@inf.ufpel.edu.br>
+Date:   Sun Apr 19 14:54:57 2015 -0300
+
+    primeira versao de janelas do chat, eh preciso corrigir algumas falhas e inserir a comunicacao em rede
