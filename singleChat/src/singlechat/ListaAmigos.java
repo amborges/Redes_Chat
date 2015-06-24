@@ -36,6 +36,7 @@ public class ListaAmigos extends Application{
     static public String USERNAME; //meu nome
     static public int USERID; //meu ID
     static public PeerData onlineFriends; //lista de amigos online
+    static public String meuCertificado;
     
     
     //esse método é para iniciar conversa com alguém, na verdade
@@ -153,7 +154,7 @@ public class ListaAmigos extends Application{
             onlineFriends.getByID(id).sendText(msg);
     }
     
-    public void reload(String peer[]){
+    public void reload(String msg){
         //atualiza a lista de amigos onlines
         //cada array é no formato
         //<PEER_IP>\n<PEER_CERTIFICADO>
@@ -163,13 +164,29 @@ public class ListaAmigos extends Application{
             onlineFriends.clear();
         }
         
-        String cert, pass, ip;
+        String cert, pass, ip, aux;
+        int size, posAtual;
         
-        for(int i = 0; i < peer.length; i = i + 3){
-            ip = peer[i];
-            pass = peer[i+1];
-            cert = peer[i+2];
+        //for(int i = 0; i < peer.length; i = i + 4){
+        for(int i = 0; i < msg.length();){
+            aux = msg.substring(i) ;
+            String peer[] = aux.split("\n");
+            
+            ip = peer[0];
+            pass = peer[1];
+            size = Integer.parseInt(peer[2]);
+            System.out.println("PRINTANDO SIZE: "+size);
+            
+            posAtual = i + ip.length() + 1 + pass.length() + 1 + peer[i+2].length() + 1;
+            if(posAtual + size >= msg.length()) size = msg.length() - posAtual;
+            cert = msg.substring(posAtual, posAtual + size);
+            if(ListaAmigos.meuCertificado.equals(cert)){
+               System.out.println("CERTIFICADOS IGUAIS");
+            }
             onlineFriends.add(cert, pass, ip);
+            
+            i = posAtual + size + 1;
+            
         }
     }
     

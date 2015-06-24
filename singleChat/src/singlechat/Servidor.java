@@ -83,12 +83,12 @@ public class Servidor extends Thread{
             
             
             //connectToServer();
-            String meuCertEmString = ListaAmigos.fromFileToString(caminhoDoMeuCertificado);
+            ListaAmigos.meuCertificado = ListaAmigos.fromFileToString(caminhoDoMeuCertificado);
             returnToClient(SingleChat.IPSERVIDOR, 
-                    "MASTER_PEER CONNECT " + new String(senhaDoMeuCertificado) + " " + meuCertEmString.length() + "\n" + meuCertEmString + "\n\n");
+                    "MASTER_PEER CONNECT " + new String(senhaDoMeuCertificado) + " " + ListaAmigos.meuCertificado.length() + "\n" + ListaAmigos.meuCertificado + "\n\n");
             
             
-            System.out.println("TAMANHO DO MEU CERTIFICADO: "+meuCertEmString.length());
+            System.out.println("TAMANHO DO MEU CERTIFICADO: "+ListaAmigos.meuCertificado.length());
             
         }catch(Exception e){
             System.out.println("FALHA ALOCAR NO SERVIDOR PRINCIPAL: " + e);
@@ -150,8 +150,8 @@ public class Servidor extends Thread{
         }
         //PEER_GROUP (<PEER_ID>,<PEER_NAME>,<PEER_IP>,<PEER_STATUS>,<PEER_KEY>\n)+\n\n
         else if(m[0].equals("PEER_GROUP")){
-            String peer[] = m[1].split("\n");
-            program.reload(peer);
+            //String peer[] = m[1].split("\n");
+            program.reload(m[1]);
         }
         else if(m[0].equals("MASTER_PEER")){
             String peer[] = m[1].split("\n");

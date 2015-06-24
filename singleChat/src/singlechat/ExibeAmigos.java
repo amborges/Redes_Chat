@@ -41,8 +41,9 @@ public class ExibeAmigos extends Application{
         Button b[] = new Button[friends.size()+1];
         int j = 0;
         int k = -1;
-        System.out.println("Tamanho de friends: "+friends.size());
+        
         for(int i = 0; i < friends.size(); i++){
+            System.out.println("Nome do amigo: "+friends.get(i).name);
             if(friends.get(i).id == ListaAmigos.USERID){
                 continue;
             }

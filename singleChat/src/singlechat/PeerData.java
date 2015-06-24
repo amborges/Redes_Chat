@@ -97,7 +97,8 @@ public class PeerData {
 				try{
                                     certificate_tmp();
                                     KeyStore ks = KeyStore.getInstance("JKS");
-                                    System.out.println("Senha do amigo: " +new String(key));
+                                    System.out.println("Tamanho do certificado do FELIPE: " +certificate.length());
+                                    
                                     ks.load(new FileInputStream("certificados/tmp.cert"), key);
                                     
                                     name = ks.aliases().nextElement();
