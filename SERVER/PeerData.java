@@ -29,31 +29,32 @@ public class PeerData {
 		public String certificate;
 		
 		public FileInputStream getCertificate(){
-			if(certificate != null){
-				try{
-                                    return new FileInputStream("SERVER/certificados/"+id+".cert");
-				}catch(Exception e){
-                                    System.out.println("Falta ao recuperar certificado de " + name);
-                                    return null;
-				}
-			}
-			return null;
+                    if(certificate != null){
+                        try{
+                            return new FileInputStream("SERVER/certificados/"+id+".cert");
+                        }catch(Exception e){
+                            System.out.println("Falta ao recuperar certificado de " + name);
+                            return null;
+                        }
+                    }
+                    return null;
 		}
                 
                 public void setNameAndID(){
-			if(certificate != null){
-				try{
-                                    certificate_tmp();
-                                    KeyStore ks = KeyStore.getInstance("JKS");
-                                    ks.load(new FileInputStream("SERVER/certificados/tmp.cert"), key);
-                                    
-                                    name = ks.aliases().nextElement();
-                                    id = name.hashCode();
-                                    if(id < 0) id *= -1;
-				}catch(Exception e){
-					System.out.println("Falta ao setar nome e id do peer " + name);
-				}
-			}
+                    if(certificate != null){
+                        try{
+                            certificate_tmp();
+                            KeyStore ks = KeyStore.getInstance("JKS");
+                            System.out.println(key);
+                            ks.load(new FileInputStream("SERVER/certificados/tmp.cert"), key);
+
+                            name = ks.aliases().nextElement();
+                            id = name.hashCode();
+                            if(id < 0) id *= -1;
+                        }catch(Exception e){
+                            System.out.println("Falta ao setar nome e id do peer " + name);
+                        }
+                    }
 		}
                 
                 public void certificate_tmp(){

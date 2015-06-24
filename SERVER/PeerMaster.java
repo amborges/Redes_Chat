@@ -68,10 +68,13 @@ public class PeerMaster{
                     //MASTER_PEER CONNECT <CERT_SIZE> \n <PEER_CERT> \n\n
                     //TEMPORARIO, antes de <cert_size>, vamos colocar o <pass>
                     //Cliente conectou e requisita a lista de peers
+                    
+                    
+                    
                     String clientIP = client.getInetAddress().toString().replaceAll("/","");
                     
                     String pass = msgSplit[2];
-                    String certificado = URLDecoder.decode(msgSplit[2]);
+                    String certificado = URLDecoder.decode(msgSplit[3].split("\n")[1]);
                     
                     System.out.println("CONECTANDO NOVO CLIENTE!");
                     
