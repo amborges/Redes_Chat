@@ -43,7 +43,6 @@ public class ExibeAmigos extends Application{
         int k = -1;
         
         for(int i = 0; i < friends.size(); i++){
-            System.out.println("Nome do amigo: "+friends.get(i).name);
             if(friends.get(i).id == ListaAmigos.USERID){
                 continue;
             }

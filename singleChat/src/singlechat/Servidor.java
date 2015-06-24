@@ -90,7 +90,7 @@ public class Servidor extends Thread{
                     "MASTER_PEER CONNECT " + new String(senhaDoMeuCertificado) + " " + certificadoCodificado.length() + "\n" + certificadoCodificado + "\n\n");
             
             
-            System.out.println("TAMANHO DO MEU CERTIFICADO: "+ListaAmigos.meuCertificado.length());
+           
             
         }catch(Exception e){
             System.out.println("FALHA ALOCAR NO SERVIDOR PRINCIPAL: " + e);
@@ -170,22 +170,27 @@ public class Servidor extends Thread{
         String  auxcertificate;
         String  auxfriendIP;
         char  auxkey[];
+       
         
         if(friendID.equals(SingleChat.IPSERVIDOR)){    
-            auxcertificate = ListaAmigos.fromFileToString(SingleChat.CERTIFICADOSERVIDOR);
+            auxcertificate = SingleChat.CERTIFICADOSERVIDOR;
           
             auxfriendIP = SingleChat.IPSERVIDOR;
             auxkey = SingleChat.PASSWORDSERVIDOR;
         }
         else{
-            auxcertificate = "certificados\\" + friendID + ".cert";
-            auxfriendIP = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID)).friendIP;
-            auxkey = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID)).key;
+            PeerData.Peer amigo = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID));
+            auxcertificate = "certificados/" + amigo.id + ".cert";
+            auxfriendIP = amigo.friendIP;
+            auxkey = amigo.key;
+            System.out.println(auxcertificate);
         }
              
         try{
             KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load(new FileInputStream(SingleChat.CERTIFICADOSERVIDOR), SingleChat.PASSWORDSERVIDOR);
+            //ks.load(new FileInputStream(SingleChat.CERTIFICADOSERVIDOR), SingleChat.PASSWORDSERVIDOR);
+            
+            ks.load(new FileInputStream(auxcertificate), auxkey);
             
                 //cria um caminho de certificação baseado em X509
             KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");

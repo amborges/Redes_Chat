@@ -50,7 +50,7 @@ public class PeerData {
             }
         }
         public void automaticStartChat(Stage stage, ListaAmigos setParent){
-            System.out.println("entrei em automaticStartChat ");
+
             try{
                 inChat = true;
                 chat = new JanelaChat(setParent, this);
@@ -97,7 +97,6 @@ public class PeerData {
 				try{
                                     certificate_tmp();
                                     KeyStore ks = KeyStore.getInstance("JKS");
-                                    System.out.println("Tamanho do certificado do FELIPE: " +certificate.length());
                                     
                                     ks.load(new FileInputStream("certificados/tmp.cert"), key);
                                     
@@ -130,17 +129,6 @@ public class PeerData {
     
     ArrayList<Peer> peer;
     
-    public void add(String peerData){
-        String pd[] = peerData.split(",");
-        Peer aux = new Peer();
-        aux.id          = Integer.parseInt(pd[0]);
-        aux.name        = pd[1];
-        aux.ip          = pd[2];
-        aux.status      = pd[3];
-        aux.key         = pd[4].toCharArray();
-        aux.certificate	= pd[5];
-        peer.add(aux);
-    }
     public void add(String certificado, String senha, String ip){
         Peer aux 			= new Peer();
         aux.ip = ip;
@@ -152,6 +140,8 @@ public class PeerData {
         aux.certificate_str2file();
 
         peer.add(aux);
+        
+        System.out.println("Amigo " + aux.name + " foi adicionado");
     }
     
     
@@ -183,8 +173,10 @@ public class PeerData {
     
     public Peer getByID(int id){
         for(Peer peer1 : peer){
-            if(peer1.id == id)
+            if(peer1.id == id){
+                System.out.println("Achei o amigo " + peer1.name + "para contato, ip... " + peer1.ip);
                 return peer1;
+            }
         }
         return null;
     }
@@ -215,8 +207,9 @@ public class PeerData {
     }
     
     public void printPeers(){
+        System.out.println("PRINTANDO PEERS:");
         for(Peer a : peer){
-            System.out.println(a.name + ": " + a.id);
+            System.out.println(a.name + ": " + a.ip);
         }
     }
 }

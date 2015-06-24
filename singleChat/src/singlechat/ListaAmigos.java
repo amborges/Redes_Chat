@@ -44,6 +44,10 @@ public class ListaAmigos extends Application{
     ListaAmigos(String setName, String setPass){
         USERNAME = setName;
         USERID = setName.hashCode();
+        
+        if(USERID < 0){
+            USERID *= -1;
+        }
         onlineFriends = new PeerData();
         theMatrix = new Servidor(USERNAME, setPass, this);
         theMatrix.start();
@@ -123,14 +127,17 @@ public class ListaAmigos extends Application{
     }
     
     public void iniciaConversa(PeerData.Peer peer){
+
+        onlineFriends.printPeers();
         if(!onlineFriends.getByID(peer.id).inChat()){ //se há uma janela aberta
           // onlineFriends.getByID(id).automaticStartChat(this);
-           Platform.runLater(new Runnable(){
+           
+            Platform.runLater(new Runnable(){
                @Override
                public void run(){
+                   
                    //ListaAmigos.this.iniciaConversa(ListaAmigos.this.onlineFriends.getByID(id));
                    onlineFriends.getByID(peer.id).automaticStartChat(new Stage(), ListaAmigos.this);
-                   System.out.println("obaa ");
                }
            });
         }
@@ -165,15 +172,23 @@ public class ListaAmigos extends Application{
             onlineFriends.clear();
         }
         
+        
         String peer[] = msg.split("\n");
         
         String cert, pass, ip;
         
         for(int i = 0; i < peer.length; i = i + 3){
+            
             ip = peer[i];
             pass = peer[i+1];
             cert = URLDecoder.decode(peer[i+2]);
-            onlineFriends.add(cert, pass, ip);
+            
+            System.out.println("PRINTANDO A MENSAGEM DO SERVIDOR: "+ip);
+            
+            //if(!peer[i].equals(ListaAmigos.meuCertificado)){
+                onlineFriends.add(cert, pass, ip);
+            //}
+            
         }
     }
     
@@ -190,7 +205,6 @@ public class ListaAmigos extends Application{
     }
     
     public void openChat(String id){
-        System.out.println("entrou em openchat");
         int theFriendID = Integer.parseInt(id);
         if(onlineFriends.hasID(theFriendID)){
             onlineFriends.getByID(theFriendID).startChat(new Stage(), this);
