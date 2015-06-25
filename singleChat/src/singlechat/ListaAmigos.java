@@ -77,7 +77,10 @@ public class ListaAmigos extends Application{
                 try{
                     String msgT = "MASTER_PEER UPDATE\n\n";
                     System.out.println(SingleChat.IPSERVIDOR);
+                    
                     Servidor.returnToClient(SingleChat.IPSERVIDOR, msgT);
+                    Thread.sleep(5000);
+                    
                     //Depois de obter a lista dos amigos, o atributo onlineFriends
                     //é automaticamente atualizado, e se abre a janela pra escolher o amigo
                     ExibeAmigos exibeAmigos = new ExibeAmigos(onlineFriends, ListaAmigos.this);
@@ -135,7 +138,6 @@ public class ListaAmigos extends Application{
             Platform.runLater(new Runnable(){
                @Override
                public void run(){
-                   
                    //ListaAmigos.this.iniciaConversa(ListaAmigos.this.onlineFriends.getByID(id));
                    onlineFriends.getByID(peer.id).automaticStartChat(new Stage(), ListaAmigos.this);
                }

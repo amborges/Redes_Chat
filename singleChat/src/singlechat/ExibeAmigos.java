@@ -44,7 +44,7 @@ public class ExibeAmigos extends Application{
         
         for(int i = 0; i < friends.size(); i++){
             if(friends.get(i).id == ListaAmigos.USERID){
-                continue;
+                //continue;
             }
             b[i] = new Button();
             b[i].setText(friends.get(i).name);

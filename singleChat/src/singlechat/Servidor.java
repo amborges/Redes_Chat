@@ -180,9 +180,9 @@ public class Servidor extends Thread{
         }
         else{
             PeerData.Peer amigo = ListaAmigos.onlineFriends.getByID(Integer.parseInt(friendID));
-            auxcertificate = "certificados/" + amigo.id + ".cert";
-            auxfriendIP = amigo.friendIP;
-            auxkey = amigo.key;
+            auxcertificate = "certificados/tamara.cert";
+            auxfriendIP = "192.168.0.14";
+            auxkey = "543210".toCharArray();
             System.out.println(auxcertificate);
         }
              
@@ -229,7 +229,61 @@ public class Servidor extends Thread{
         }catch(Exception e){
             System.out.println("Erro ao retornar msg ao amigo : " + e);
         }
-    }
+        
+        
+ }
+    
+    public static void forceConnect(String auxfriendIP, String auxcertificate, char auxkey[], String msg){
+        /*
+        Realiza o retorno de uma mensagem ao cliente
+        */
+        
+        auxkey = "543210".toCharArray();
+        auxcertificate = "certificados/tamara.cert";
+        auxfriendIP = "192.160.0.14";
+        
+        try{
+            KeyStore ks = KeyStore.getInstance("JKS");
+            ks.load(new FileInputStream(auxcertificate), auxkey);
+            
+                //cria um caminho de certificação baseado em X509
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf.init(ks, auxkey);
+            
+                //cria um SSLContext segundo o protocolo informado
+            SSLContext contextoSSL = SSLContext.getInstance("SSLv3");
+            contextoSSL.init(kmf.getKeyManagers(), null, null);
+            
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(
+                    TrustManagerFactory.getDefaultAlgorithm());
+                        
+            tmf.init(ks);
+            TrustManager tms[] = tmf.getTrustManagers();
+            
+            KeyManagerFactory keymf = KeyManagerFactory.getInstance(
+                KeyManagerFactory.getDefaultAlgorithm());
+            
+            keymf.init(ks, auxkey);
+            KeyManager kms[] = keymf.getKeyManagers();
+            
+            contextoSSL = SSLContext.getInstance("SSL");
+            contextoSSL.init(kms, tms, null);
+            
+            SSLSocketFactory ssf = contextoSSL.getSocketFactory();
+            
+            SSLSocket falante = (SSLSocket) ssf.createSocket(auxfriendIP, SingleChat.DOORSERVIDOR);
+            
+            ObjectOutputStream sender = new ObjectOutputStream(falante.getOutputStream());
+            sender.flush();
+            sender.writeUTF(msg);
+            sender.close();
+            
+            falante.close();
+            
+        }catch(Exception e){
+            System.out.println("(force)Erro ao retornar msg ao amigo : " + e);
+        }
+ }
     
     public void connectToServer(){
         /*
