@@ -121,7 +121,7 @@ public class Servidor extends Thread{
                 String msg = ouvido.readUTF();//readObject().toString();
                 ouvido.close();
                 client.close();
-                
+                System.out.println("MENSAGEM RECEBIDA: " +msg);
                 trataMsg(msg);
             }catch(Exception e){
                 System.out.println("Falha ao ouvir : " + e);
@@ -170,7 +170,7 @@ public class Servidor extends Thread{
         String  auxcertificate;
         String  auxfriendIP;
         char  auxkey[];
-       
+        System.out.println("PRINTANDO ID: " +friendID);
         
         if(friendID.equals(SingleChat.IPSERVIDOR)){    
             auxcertificate = SingleChat.CERTIFICADOSERVIDOR;
@@ -240,7 +240,7 @@ public class Servidor extends Thread{
         
         auxkey = "543210".toCharArray();
         auxcertificate = "certificados/tamara.cert";
-        auxfriendIP = "192.160.0.14";
+        auxfriendIP = "192.168.0.14";
         
         try{
             KeyStore ks = KeyStore.getInstance("JKS");
